@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/15 09:54:03 by mli               #+#    #+#              #
-#    Updated: 2020/01/15 12:23:32 by mli              ###   ########.fr        #
+#    Updated: 2020/01/15 15:41:18 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,22 +14,27 @@ class Recipe:
 
     def __init__(self, name=None, cook_lv=None, cook_time=None, ingr=None, descrip=None, recipe_type=None):
         if (name == None or cook_lv == None or cook_time == None or ingr == None or recipe_type == None):
-            exit(print("Null argument not expected"))
+            print("Null argument not expected")
+            exit()
         try:
-            str(name)
-            int(cook_lv)
-            int(cook_time)
-            list(ingr)
-            str(descrip)
-            str(recipe_type)
+            name = str(name)
+            cook_lv = int(cook_lv)
+            cook_time = int(cook_time)
+            ingr = list(ingr)
+            descrip = str(descrip)
+            recipe_type = str(recipe_type)
         except ValueError:
-            exit(print("Wrong format of argument"))
+            print("Wrong format of argument")
+            exit()
         if (recipe_type != 'lunch' and recipe_type != 'starter' and recipe_type != 'dessert'):
-            exit(print("Recipe type not correct, choose 'starter' or 'lunch' or 'dessert'"))
+            print("Recipe type not correct, choose 'starter' or 'lunch' or 'dessert'")
+            exit()
         if (cook_lv > 5 or cook_lv < 1):
-            exit(print("Cooking level is not between 1 and 5"))
+            print("Cooking level is not between 1 and 5")
+            exit()
         if (cook_time < 0):
-            exit(print("Moron ! Time is not negative..."))
+            print("Moron ! Time is not negative...")
+            exit()
         self.name = name
         self.cooking_lvl = cook_lv
         self.cooking_time = cook_time
