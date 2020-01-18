@@ -6,27 +6,33 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/17 15:22:51 by mli               #+#    #+#              #
-#    Updated: 2020/01/17 17:18:26 by mli              ###   ########.fr        #
+#    Updated: 2020/01/19 00:25:58 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-import inspect
 import time
 from random import randint
 
-fcts = ["start_machine", "boil_water", "make_coffee", "add_watter"]
+import inspect
+import getpass
 
-def log(*fct):
+fcts = {"start_machine" : "Start Machine", "boil_water" : "Boil Water",
+        "make_coffee" : "Make Coffee", "add_water" : "Add Water"}
+username = getpass.getuser()
 
+def log(funct):
     def inner(*args, **kwargs):
-        f = open("machine.log", 'w')
-        if (inspect.stack()[1].function == 'make_coffee'):
-            f.write(inspect.stack()[1].function)
-        f.close()
-        return (fct[0](*args, **kwargs))
-    
+        with open("machine.log", 'a') as f:
+            f.write("(%s)Running: " %username)
+            for fct in fcts:
+                if (fct in inspect.stack()[1][4][0]):
+                    f.write("%s\t" %fcts[fct])
+                    break
+            begin_time = time.time()
+            return_value = funct(*args, **kwargs)
+            f.write("[ exec-time = %.3f ms ]\n" %(time.time() - begin_time))
+        return (return_value)
     return (inner)
-
 
 class CoffeeMachine():
 
@@ -66,5 +72,3 @@ if __name__ == "__main__":
 
     machine.make_coffee()
     machine.add_water(70)
-
-
