@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/17 15:22:51 by mli               #+#    #+#              #
-#    Updated: 2020/01/19 00:25:58 by mli              ###   ########.fr        #
+#    Updated: 2020/01/19 12:33:44 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,11 @@ def log(funct):
                     break
             begin_time = time.time()
             return_value = funct(*args, **kwargs)
-            f.write("[ exec-time = %.3f ms ]\n" %(time.time() - begin_time))
+            exec_time = time.time() - begin_time
+            if (exec_time > 0.5):
+                f.write("[ exec-time = %.3f  s ]\n" %(exec_time))
+            else:
+                f.write("[ exec-time = %.3f ms ]\n" %(exec_time * 1000))
         return (return_value)
     return (inner)
 
