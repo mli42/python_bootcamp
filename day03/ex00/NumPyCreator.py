@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/19 19:05:40 by mli               #+#    #+#              #
-#    Updated: 2020/01/19 21:36:42 by mli              ###   ########.fr        #
+#    Updated: 2020/01/19 22:47:10 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ class NumPyCreator:
 
     @staticmethod
     def from_iterable(itr):
-        return (np.asarray(itr))
+        return (np.fromiter(itr, float))
 
     @staticmethod
     def from_shape(shape, value=0):
