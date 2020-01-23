@@ -6,16 +6,16 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/22 14:32:22 by mli               #+#    #+#              #
-#    Updated: 2020/01/22 14:47:59 by mli              ###   ########.fr        #
+#    Updated: 2020/01/23 11:05:08 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 import numpy as np
 
 class MyLinearRegression():
-"""Description:
+    """Description:
         My personnal linear regression class to fit like a boss.
-"""
+    """
     def __init__(self, theta):
         try:
             self.theta = np.asarray(theta)
@@ -52,7 +52,7 @@ class MyLinearRegression():
         if (shape_x[1] != shape_th[0] - 1 or shape_x[0] != shape_y[0]):
             return (None)
         res = []
-        pred = predict_(theta, X)
+        pred = self.predict_(X)
         f = lambda x, y : (x - y) ** 2
         for nb1, nb2 in zip(pred, Y):
             res.append(f(nb1, nb2))
@@ -65,15 +65,9 @@ class MyLinearRegression():
         shape_th = np.shape(theta)
         if (shape_x[1] != shape_th[0] - 1 or shape_x[0] != shape_y[0]):
             return (None)
-        pred = predict_(theta, X)
+        pred = self.predict_(X)
         f = lambda x, y : (x - y) ** 2
-        return (float(mean_zip3f(pred, Y, f)) / 2)
-
-    @staticmethod
-    def vec_linear_mse(x, y, theta):
-        res = np.dot(x, theta) - y
-        res = np.dot(np.transpose(res), res)
-        return (res / len(x))
+        return (float(self.mean_zip3f(pred, Y, f)) / 2)
 
     @staticmethod
     def vec_gradient(x, y, theta):
@@ -98,5 +92,5 @@ class MyLinearRegression():
             new_X.append((np.insert(X[i], 0, [1])))
         new_X = np.asarray(new_X)
         for i in range(n_cycle):
-            theta -= alpha * vec_gradient(new_X, Y, theta)
-        return (theta)
+            self.theta -= alpha * self.vec_gradient(new_X, Y, self.theta)
+        return (self.theta)
