@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/14 10:13:57 by mli               #+#    #+#              #
-#    Updated: 2020/01/14 14:25:09 by mli              ###   ########.fr        #
+#    Updated: 2020/04/04 18:45:43 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,8 +24,13 @@ cookbook["salad"] = {"meal" : "lunch", "prep_time" : 15,
 def print_recipe(recipe):
     print("Here is your recipe for %s, a %s meal:" %(recipe, cookbook[recipe]["meal"]))
     print("It takes %d minutes of cooking." %(cookbook[recipe]["prep_time"]))
-    print("And that's what you'll need :", cookbook[recipe]["ingredients"])
-    print("")
+    print("And that's what you'll need : ", end="")
+    ingredients = len(cookbook[recipe]["ingredients"])
+    for product in range(0, ingredients):
+        print("%s" %cookbook[recipe]["ingredients"][product].strip(), end="")
+        if (product != ingredients - 1):
+            print(", ", end="")
+    print("\n")
 
 def recipe_delone(recipe):
     print("%s's recipe is deleted\n" %recipe)
@@ -49,7 +54,7 @@ def ft_addrecipe():
         var.append(str(input("Please, set your recipe name: ")))
         var.append(str(input("and its type of meal: ")))
         var.append(int(input("How long does it takes, in minutes: ")))
-        var.append(list(input("Don't forget the ingredients ! : ")))
+        var.append(list(str(input("Don't forget the ingredients ! : ")).split(",")))
     except ValueError:
         print("\nWrong input... Try again\nSet '-1' in time to giveup\n")
         ft_addrecipe()
