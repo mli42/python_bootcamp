@@ -6,14 +6,11 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/14 00:44:47 by mli               #+#    #+#              #
-#    Updated: 2020/01/14 00:46:17 by mli              ###   ########.fr        #
+#    Updated: 2020/11/11 21:48:57 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 phrase = "The right format"
 
-dash_size = 42 - len(phrase)
-while (dash_size > 0):
-    print("-", end="")
-    dash_size -= 1
-print(phrase, end="")
+dashs = 42 - len(phrase)
+print(("-" * dashs) + phrase, end="")

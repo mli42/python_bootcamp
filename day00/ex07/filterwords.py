@@ -6,26 +6,22 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/14 14:51:41 by mli               #+#    #+#              #
-#    Updated: 2020/01/14 15:04:16 by mli              ###   ########.fr        #
+#    Updated: 2020/11/11 22:22:20 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 import sys
 
-sys.argv.pop(0)
-if (len(sys.argv) != 2):
+if (len(sys.argv) != 3):
     exit(print("Wrong number of args \!"))
 
 try:
-    string = str(sys.argv[0])
-    max_len = int(sys.argv[1])
+    string = str(sys.argv[1])
+    max_len = int(sys.argv[2])
 except ValueError:
     exit(print("Wrong types of arguments"))
 
-splited = string.split()
+splited = [word.strip("!\"#$%&'()*+,-./:;<=>?@[\]^_`{|}~") for word in string.split()]
+res = [word for word in splited if len(word) > max_len]
 
-for tmp in splited:
-    for words in splited:
-        if (len(words) <= max_len):
-            splited.remove(words)
-print(splited)
+print(res)
