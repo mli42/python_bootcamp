@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/19 23:44:36 by mli               #+#    #+#              #
-#    Updated: 2020/11/23 22:00:09 by mli              ###   ########.fr        #
+#    Updated: 2020/11/23 23:02:38 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,6 +25,13 @@ class ScrapBooker:
             return (cropped)
         # If out of bounds, returns original img?
         return (array)
+
+    @staticmethod
+    def thin(array, n, axis):
+        axis=not axis # Because np and asked axis are inversed
+        index_to_delete = list(range(n - 1, array.shape[axis], n))
+        made_thinner = np.delete(array, index_to_delete, axis=axis)
+        return made_thinner
 
 def showimg(array):
     plt.imshow(array)
