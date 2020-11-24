@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/19 23:44:36 by mli               #+#    #+#              #
-#    Updated: 2020/11/23 23:02:38 by mli              ###   ########.fr        #
+#    Updated: 2020/11/24 12:07:23 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,10 +28,22 @@ class ScrapBooker:
 
     @staticmethod
     def thin(array, n, axis):
-        axis=not axis # Because np and asked axis are inversed
+        axis=int(not axis)
         index_to_delete = list(range(n - 1, array.shape[axis], n))
         made_thinner = np.delete(array, index_to_delete, axis=axis)
         return made_thinner
+
+    @staticmethod
+    def juxtapose(array, n, axis):
+        res = np.copy(array)
+        for i in range(n):
+            res = np.concatenate((res, array), axis=axis)
+        return res
+
+    def mosaic(self, array, dimensions):
+        res = self.juxtapose(array, dimensions[0] - 1, 0)
+        res = self.juxtapose(res, dimensions[1] - 1, 1)
+        return res
 
 def showimg(array):
     plt.imshow(array)
@@ -45,3 +57,4 @@ if __name__ == "__main__":
 
     # Crop Test
     showimg(scrap.crop(img42ai, (30, 200), (140, 0)))
+    showimg(scrap.mosaic(img42ai, (2, 3)))
