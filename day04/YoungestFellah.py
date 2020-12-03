@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/02 16:43:22 by mli               #+#    #+#              #
-#    Updated: 2020/12/02 22:23:48 by mli              ###   ########.fr        #
+#    Updated: 2020/12/02 22:49:46 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,5 +25,5 @@ def youngestFellah(df: pd.DataFrame, year: int) -> dict:
 
 if __name__ == "__main__":
     loader = FileLoader()
-    data = loader.load('../resources/athlete_events.csv')
+    data = loader.load('./resources/athlete_events.csv')
     print(youngestFellah(data, 2004)) # {'F': 13.0, 'M': 14.0}

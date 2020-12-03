@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/29 23:15:06 by mli               #+#    #+#              #
-#    Updated: 2020/11/29 23:38:36 by mli              ###   ########.fr        #
+#    Updated: 2020/12/02 22:50:02 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,8 +26,8 @@ class FileLoader:
 
 if __name__ == "__main__":
     loader = FileLoader()
-    #data = loader.load("../resources/test.csv")
-    data = loader.load("../resources/athlete_events.csv")
+    #data = loader.load("./resources/test.csv")
+    data = loader.load("./resources/athlete_events.csv")
     loader.display(data, 3)
     print("----------------------------------")
     loader.display(data, -3)
