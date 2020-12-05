@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/03 18:58:21 by mli               #+#    #+#              #
-#    Updated: 2020/12/04 00:43:58 by mli              ###   ########.fr        #
+#    Updated: 2020/12/05 22:39:51 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,6 +30,5 @@ def proportionBySport(df: pd.DataFrame, yr: int, sport: str, gdr: str) -> float:
 if __name__ == "__main__":
     loader = FileLoader()
     data = loader.load('./resources/athlete_events.csv')
-    print(proportionBySport(data, 2004, 'Tennis', 'F')) # 0.01935634328358209
-    print(0.01935634328358209)
-    # But Conda Python 3.7.4 gives me: 0.019302325581395347
+    print(proportionBySport(data, 2004, 'Tennis', 'F')) # 0.019302325581395347
+    print(0.01935634328358209, "-> Example's Result") # Given by removing names duplicates
