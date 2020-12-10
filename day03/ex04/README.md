@@ -1,3 +1,9 @@
+## 3D Visualization of K-means Clustering
+
+<p align="center">
+  <img src="fig.png" alt="3D Visualization of K-means Clustering" />
+</p>
+
 ## Links that helped me
 
 - [What is K-Means?](https://bigdata-madesimple.com/possibly-the-simplest-way-to-explain-k-means-algorithm/)
