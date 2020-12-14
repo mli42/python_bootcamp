@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/13 21:56:52 by mli               #+#    #+#              #
-#    Updated: 2020/12/13 22:21:30 by mli              ###   ########.fr        #
+#    Updated: 2020/12/14 18:36:28 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,9 +25,9 @@ def simple_predict(x: np.ndarray, theta: np.ndarray) -> np.ndarray:
     Raises:
       This function should not raise any Exception.
     """
-    if theta.shape not in [(2,), (2, 1)] or (len(x.shape) != 1 and x.shape[1] != 1):
-        return None
     intercepted = add_intercept(x)
+    if intercepted.shape[1] != theta.shape[0]:
+        return None
     y_hat = intercepted.dot(theta)
     return y_hat
 
