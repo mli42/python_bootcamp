@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/14 16:11:04 by mli               #+#    #+#              #
-#    Updated: 2020/12/14 18:55:32 by mli              ###   ########.fr        #
+#    Updated: 2020/12/15 10:24:31 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,7 +47,7 @@ def cost_(y: np.ndarray, y_hat: np.ndarray) -> float:
     j_elem = cost_elem_(y, y_hat)
     if j_elem is None:
         return None
-    return sum(j_elem)[0]
+    return np.sum(j_elem)
 
 if __name__ == "__main__":
     x1 = np.array([[0.], [1.], [2.], [3.], [4.]])
