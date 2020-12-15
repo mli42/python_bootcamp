@@ -6,12 +6,11 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/14 16:11:04 by mli               #+#    #+#              #
-#    Updated: 2020/12/15 10:24:17 by mli              ###   ########.fr        #
+#    Updated: 2020/12/15 23:20:54 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 import numpy as np
-from prediction import simple_predict as predict
 
 def cost_(y: np.ndarray, y_hat: np.ndarray) -> float:
     """Computes the half mean squared error of two non-empty numpy.ndarray,
