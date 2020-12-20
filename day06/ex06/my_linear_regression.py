@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/19 20:59:43 by mli               #+#    #+#              #
-#    Updated: 2020/12/19 21:48:58 by mli              ###   ########.fr        #
+#    Updated: 2020/12/20 22:12:28 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,6 +27,13 @@ class MyLinearRegression():
         self.thetas = thetas
 
     @staticmethod
+    def mse_(y: np.ndarray, y_hat: np.ndarray) -> float:
+        if y.shape != y_hat.shape:
+            return None
+        mse_elem = (y_hat - y) ** 2 / (y.shape[0])
+        return np.sum(mse_elem)
+
+    @staticmethod
     def cost_elem_(y: np.ndarray, y_hat: np.ndarray) -> np.ndarray:
         """
         Description:
@@ -45,7 +52,8 @@ class MyLinearRegression():
         res = (y_hat - y) ** 2 / (2 * y.shape[0])
         return res
 
-    def cost_(self, y: np.ndarray, y_hat: np.ndarray) -> float:
+    @staticmethod
+    def cost_(y: np.ndarray, y_hat: np.ndarray) -> float:
         """Computes the half mean squared error of two non-empty numpy.ndarray,
             without any for loop. The two arrays must have the same dimensions.
         Args:
@@ -60,7 +68,7 @@ class MyLinearRegression():
         """
         if y.shape != y_hat.shape:
             return None
-        j_elem = self.cost_elem_(y, y_hat)
+        j_elem = MyLinearRegression.cost_elem_(y, y_hat)
         return np.sum(j_elem)
 
     @staticmethod
