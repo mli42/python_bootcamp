@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/20 18:27:27 by mli               #+#    #+#              #
-#    Updated: 2020/12/21 00:24:34 by mli              ###   ########.fr        #
+#    Updated: 2020/12/21 15:26:11 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,7 +39,7 @@ def plot_cost(x: np.ndarray, y: np.ndarray) -> None:
     plt.grid()
 
     linear_model = MyLR(np.array([[0], [0]]), max_iter=500)
-    thetas_0 = range(100, 150, 10)
+    thetas_0 = range(85, 95, 2)
     for t0 in thetas_0:
         linear_model.thetas[0][0] = t0
 
