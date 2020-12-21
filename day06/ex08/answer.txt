@@ -1,0 +1,36 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    answer.txt                                         :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2020/12/21 16:32:40 by mli               #+#    #+#              #
+#    Updated: 2020/12/21 16:44:34 by mli              ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+1. What is a hypothesis and what is its goal?
+A hypothesis is a function which represents our model
+with x given, h returns the y corresponding prediction
+
+2. What is the cost function and what does it represent?
+The cost function tells us how bad our model is, how much it costs us to use it
+How much information we lose when we use it.
+If the model is good, we won’t lose that much,
+if it’s terrible it will cost us a lot
+
+3. What is Linear Gradient Descent and what does it do?
+The cost function J shows us if our model is good,
+The LGD uses it to find the right thetas values for which J is the closest to 0
+
+4. What happens if you choose a learning rate that is too large?
+If the learning rate alpha is too large, the LGD can overshoot and never find
+the value we want
+
+5. What happens if you choose a very small learning rate,
+but still a sufficient number of cycles?
+If the learning rate is too small, the LDG will be very slow
+
+6. Can you explain MSE and what it measures?
+The MSE = J * 2, it measures the same thing as the cost function J.
