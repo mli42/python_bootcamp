@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/19 20:59:43 by mli               #+#    #+#              #
-#    Updated: 2020/12/19 21:36:00 by mli              ###   ########.fr        #
+#    Updated: 2020/12/21 21:15:49 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -77,7 +77,7 @@ if __name__ == "__main__":
     """
 
     # Example 1.2:
-    print(lr2.cost_elem_(lr1.predict_(x), y))
+    print(lr2.cost_elem_(lr2.predict_(x), y))
     # Output:
     """
     array([[35.6749755],
@@ -88,7 +88,7 @@ if __name__ == "__main__":
     """
 
     # Example 1.3:
-    print(lr2.cost_(lr1.predict_(x), y))
+    print(lr2.cost_(lr2.predict_(x), y))
     # Output:
     """
     92.66433192085971
