@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/19 20:59:43 by mli               #+#    #+#              #
-#    Updated: 2020/12/22 17:09:31 by mli              ###   ########.fr        #
+#    Updated: 2021/01/02 18:22:02 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -123,9 +123,14 @@ class MyLinearRegression():
         Raises:
             This function should not raise any Exception.
         """
+        theta = self.thetas
+        if (0 in [x.size, y.size, theta.size] or x.shape[0] != y.shape[0] or
+            (x.shape[1] + 1) != theta.shape[0]):
+            return None
         m = x.shape[0]
+        y_hat = self.predict_(x)
         x = self.add_intercept(x)
-        nabla_j = x.T.dot(x.dot(self.thetas) - y) / m
+        nabla_j = x.T.dot(y_hat - y) / m
         return nabla_j
 
     def fit_(self, x: np.ndarray, y: np.ndarray) -> None:
