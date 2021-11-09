@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/13 16:15:10 by mli               #+#    #+#              #
-#    Updated: 2021/11/09 18:01:58 by mli              ###   ########.fr        #
+#    Updated: 2021/11/09 18:16:05 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,6 +47,11 @@ def text_analyzer(entry: str = None) -> None:
     print("- %d punctuation marks" % ulps[charType.PUNC])
     print("- %d spaces" % ulps[charType.SPACE])
 
+
+if __name__ == "__main__":
+    if (len(sys.argv) != 2):
+        exit()
+    text_analyzer(sys.argv[1])
 
 """
 text_analyzer("Python 2.0, released 2000, introduced features \
