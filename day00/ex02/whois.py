@@ -6,20 +6,29 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/13 15:29:38 by mli               #+#    #+#              #
-#    Updated: 2020/01/13 16:54:58 by mli              ###   ########.fr        #
+#    Updated: 2021/11/06 16:13:56 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 import sys
 
+
+def quit(verbose: bool = True) -> None:
+    if (verbose):
+        print("ERROR")
+    exit(1)
+
+
 sys.argv.pop(0)
-if (len(sys.argv) != 1):
-    exit(print("ERROR"))
+if (len(sys.argv) < 1):
+    quit(False)
+elif (len(sys.argv) > 1):
+    quit()
 
 try:
     nb = int(sys.argv[-1])
 except ValueError:
-    exit(print("Error, not an integer"))
+    quit()
 
 if (nb == 0):
     print("I'm Zero.")
