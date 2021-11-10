@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/14 00:10:32 by mli               #+#    #+#              #
-#    Updated: 2020/01/14 00:23:56 by mli              ###   ########.fr        #
+#    Updated: 2021/11/10 17:59:45 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,9 +16,4 @@ size = len(t)
 if (size == 0):
     exit(print("No number in entry"))
 
-print("The %d numbers are: " %size, end="") if (size > 0) else print("The number is: ", end="")
-for i in range(0, size):
-    print(t[i], end="")
-    if (i != size - 1):
-        print(", ", end="")
-print("")
+print(f"The {size} numbers are:", ", ".join(map(str, t)))
