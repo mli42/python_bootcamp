@@ -6,41 +6,59 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/14 16:26:01 by mli               #+#    #+#              #
-#    Updated: 2020/01/14 17:18:38 by mli              ###   ########.fr        #
+#    Updated: 2021/11/11 11:44:54 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 from random import randint as rand
 
-isnum = 1
+NB_MIN = 1
+NB_MAX = 99
+isnum = True
 count = 1
-mys = rand(0, 99)
+mys = rand(NB_MIN, NB_MAX)
+guess = ""
 
-try:
-    nb = input("Try to guess an number between 0 and 99 ! Or 'exit'...\n>> ")
-    nb = int(nb)
-except ValueError:
-    exit("\tYou ran away.") if (nb == 'exit') else print("That's not a number")
-    isnum = 0
+def handleValueError() -> None:
+    global isnum
 
-while (nb != mys):
-    if (nb < mys and isnum == 1):
-        print("It's too low!")
-    elif (nb > mys and isnum == 1):
-        print("It's too high!")
+    if (guess == 'exit'):
+        exit("\tYou ran away.")
+    print("That's not a number")
+    isnum = False
+
+"""
+Ask the next guess from the player
+"""
+def askGuess(firstTime: bool = False) -> None:
+    global guess
+    global isnum
+
+    askString = "Try again !\n>> "
+    if (firstTime is True):
+        askString = f"Try to guess an number between {NB_MIN} and {NB_MAX} ! Or 'exit'...\n>> "
     try:
-        if (count % 3 == 0):
-            print("You can write 'exit' in order to giveup...")
-        nb = input("Try again !\n>> ")
-        nb = int(nb)
+        guess = input(askString)
+        guess = int(guess)
+        isnum = True
     except ValueError:
-        exit("\tYou ran away.") if (nb == 'exit') else print("That's not a number")
-        isnum = 0
+        handleValueError()
+
+askGuess(firstTime = True)
+while (guess != mys):
+    if (isnum == False):
+        pass
+    elif (guess < mys):
+        print("It's too low!")
+    elif (guess > mys):
+        print("It's too high!")
+
+    askGuess()
     count += 1
 
 if (mys == 42):
     print("The answer to the ultimate question of life, the universe and everything is 42.")
 if (count > 1):
-    print("Nice, indeed it was %d and you did it with %d attempts" %(mys, count))
+    print("Nice, indeed it was %d and you won in %d attempts" %(mys, count))
 else:
     print("Wow, first try ! Congrats")
