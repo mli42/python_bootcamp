@@ -6,13 +6,13 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/14 15:12:28 by mli               #+#    #+#              #
-#    Updated: 2020/11/11 22:42:19 by mli              ###   ########.fr        #
+#    Updated: 2021/11/11 14:07:19 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 import sys
 
-if len(sys.argv) == 0:
+if len(sys.argv) <= 1:
 	exit()
 
 args = [string.upper() for string in sys.argv[1:]]

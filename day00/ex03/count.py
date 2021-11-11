@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/13 16:15:10 by mli               #+#    #+#              #
-#    Updated: 2021/11/09 18:16:05 by mli              ###   ########.fr        #
+#    Updated: 2021/11/11 16:12:38 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,9 +49,12 @@ def text_analyzer(entry: str = None) -> None:
 
 
 if __name__ == "__main__":
-    if (len(sys.argv) != 2):
-        exit()
-    text_analyzer(sys.argv[1])
+    if (len(sys.argv) == 1):
+        text_analyzer()
+    elif (len(sys.argv) == 2):
+        text_analyzer(sys.argv[1])
+    else:
+        print("Too much arguments")
 
 """
 text_analyzer("Python 2.0, released 2000, introduced features \
