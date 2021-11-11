@@ -6,20 +6,13 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/14 10:13:57 by mli               #+#    #+#              #
-#    Updated: 2020/04/04 18:45:43 by mli              ###   ########.fr        #
+#    Updated: 2021/11/11 18:15:26 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # Use of nested dictionary
 
-# Init the cookbook with 3 recipes:
 cookbook = {}
-cookbook["sandwich"] = {"meal" : "lunch", "prep_time" : 10,
-        "ingredients" : ["ham", "bread", "cheese", "tomatoes"]}
-cookbook["cake"] = {"meal" : "dessert", "prep_time" : 60,
-        "ingredients" : ["flour", "suggar", "eggs"]}
-cookbook["salad"] = {"meal" : "lunch", "prep_time" : 15,
-        "ingredients" : ["avocado", "arugula", "tomatoes", "spinach"]}
 
 def print_recipe(recipe):
     print("Here is your recipe for %s, a %s meal:" %(recipe, cookbook[recipe]["meal"]))
@@ -27,18 +20,19 @@ def print_recipe(recipe):
     print("And that's what you'll need : ", end="")
     ingredients = len(cookbook[recipe]["ingredients"])
     for product in range(0, ingredients):
-        print("%s" %cookbook[recipe]["ingredients"][product].strip(), end="")
+        print("%s" %cookbook[recipe]["ingredients"][product], end="")
         if (product != ingredients - 1):
             print(", ", end="")
     print("\n")
 
-def recipe_delone(recipe):
+def recipe_delone(recipe: str):
     print("%s's recipe is deleted\n" %recipe)
     del cookbook[recipe]
 
-def addrecipe(recipe, t_meal, time, ingredients):
+def addrecipe(recipe: str, t_meal: str, time: int, ingredients: list[str], verbose: bool = True):
     cookbook[recipe] = {"meal" : t_meal, "prep_time" : time, "ingredients" : ingredients}
-    print("%s's recipe is added\n" %recipe)
+    if (verbose):
+        print("%s's recipe is added\n" %recipe)
 
 def print_cookbook():
     print("The cookbook contains:")
@@ -48,18 +42,22 @@ def print_cookbook():
 
 # Function used in the loop:
 
+def strip_arr(src: list[str]) -> list[str]:
+    for elem in src:
+        yield elem.strip()
+
 def ft_addrecipe():
-    var = []
     try:
-        var.append(str(input("Please, set your recipe name: ")))
-        var.append(str(input("and its type of meal: ")))
-        var.append(int(input("How long does it takes, in minutes: ")))
-        var.append(list(str(input("Don't forget the ingredients ! : ")).split(",")))
+        recipe_name = str(input("Please, set your recipe name: "))
+        type_meal = str(input("and its type of meal: "))
+        time_min = int(input("How long does it takes, in minutes: "))
+        if (time_min < 0): raise ValueError
+        ingredients = str(input("Don't forget the ingredients ! : ")).split(",")
     except ValueError:
-        print("\nWrong input... Try again\nSet '-1' in time to giveup\n")
-        ft_addrecipe()
-    if (var[2] != -1):
-        addrecipe(var[0], var[1], var[2], var[3])
+        print("\nWrong input...\n")
+        return
+    ingredients = [elem for elem in strip_arr(ingredients) if (len(elem) > 0)]
+    addrecipe(recipe_name, type_meal, time_min, ingredients)
 
 def ft_delrecipe():
     print_cookbook()
@@ -85,6 +83,11 @@ def ft_onerecipe():
 
 def ft_exit():
     print("\n\tHope you found what you were looking for, bye !\n")
+
+# Init the cookbook with 3 recipes:
+addrecipe("sandwich", "lunch", 10, ["ham", "bread", "cheese", "tomatoes"], False)
+addrecipe("cake", "dessert", 60, ["flour", "suggar", "eggs"], False)
+addrecipe("salad", "lunch", 15, ["avocado", "arugula", "tomatoes", "spinach"], False)
 
 # Algorithm
 
