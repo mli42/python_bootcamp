@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/14 10:13:57 by mli               #+#    #+#              #
-#    Updated: 2021/11/11 18:15:26 by mli              ###   ########.fr        #
+#    Updated: 2021/11/21 15:01:40 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,18 +14,13 @@
 
 cookbook = {}
 
-def print_recipe(recipe):
+def print_recipe(recipe: str) -> None:
     print("Here is your recipe for %s, a %s meal:" %(recipe, cookbook[recipe]["meal"]))
     print("It takes %d minutes of cooking." %(cookbook[recipe]["prep_time"]))
     print("And that's what you'll need : ", end="")
-    ingredients = len(cookbook[recipe]["ingredients"])
-    for product in range(0, ingredients):
-        print("%s" %cookbook[recipe]["ingredients"][product], end="")
-        if (product != ingredients - 1):
-            print(", ", end="")
-    print("\n")
+    print(", ".join(cookbook[recipe]["ingredients"]))
 
-def recipe_delone(recipe: str):
+def recipe_delone(recipe: str) -> None:
     print("%s's recipe is deleted\n" %recipe)
     del cookbook[recipe]
 
@@ -35,9 +30,12 @@ def addrecipe(recipe: str, t_meal: str, time: int, ingredients: list[str], verbo
         print("%s's recipe is added\n" %recipe)
 
 def print_cookbook():
-    print("The cookbook contains:")
-    for recipe in cookbook:
-        print("- " + recipe)
+    if len(cookbook) == 0:
+        print("Your cookbook is empty :(")
+    else:
+        print("The cookbook contains:")
+        for recipe in cookbook:
+            print("- " + recipe)
     print("")
 
 # Function used in the loop:
