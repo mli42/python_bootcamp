@@ -6,16 +6,21 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/13 14:00:55 by mli               #+#    #+#              #
-#    Updated: 2020/01/13 14:01:04 by mli              ###   ########.fr        #
+#    Updated: 2021/11/21 15:48:14 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-Output a list of installed packages : help("modules")
+Output a list of installed packages :
+python -c 'help("modules")'
 
-Output a list of installed packages and their versions : 'pip freeze' or 'pip list'
+Output a list of installed packages and their versions :
+'pip freeze' or 'pip list' or 'conda list'
 
-Show the package metadata of numpy : pip show numpy
+Show the package metadata of numpy :
+pip show numpy
 
-Search for PyPI packages whose name or summary contains "tesseract" : pip search tesseract
+Search for PyPI packages whose name or summary contains "tesseract" :
+pip search tesseract
 
-Freeze the packages and their current versions in a requirements.txt file you have to turn-in : 'pip freeze > 'requirements.txt' 
+Freeze the packages and their current versions in a requirements.txt file you have to turn-in :
+'pip freeze > requirements.txt'
