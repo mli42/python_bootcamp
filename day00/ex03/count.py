@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/13 16:15:10 by mli               #+#    #+#              #
-#    Updated: 2021/11/11 16:12:38 by mli              ###   ########.fr        #
+#    Updated: 2021/11/21 16:03:01 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,17 +21,24 @@ class charType():
     LEN = 4
 
 
-def text_analyzer(entry: str = None) -> None:
+def text_analyzer(*args) -> None:
     '''
         This function counts the number of upper characters, lower characters,
         punctuation and spaces in a given text.
     '''
 
+    entry = ""
+    argc = len(args)
     ulps = [0] * charType.LEN
-    if entry is None:
-        entry = ""
+    if argc == 0:
+        print("Waiting for input...")
         for line in sys.stdin:
             entry += line.rstrip('\n')
+    elif argc == 1:
+        entry = args[0]
+    else:
+        print("ERROR")
+        return
     for char in entry:
         if char.isupper():
             ulps[charType.UPPER] += 1
@@ -51,10 +58,8 @@ def text_analyzer(entry: str = None) -> None:
 if __name__ == "__main__":
     if (len(sys.argv) == 1):
         text_analyzer()
-    elif (len(sys.argv) == 2):
-        text_analyzer(sys.argv[1])
     else:
-        print("Too much arguments")
+        text_analyzer(*sys.argv[1:])
 
 """
 text_analyzer("Python 2.0, released 2000, introduced features \
