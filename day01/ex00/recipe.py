@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/15 09:54:03 by mli               #+#    #+#              #
-#    Updated: 2020/11/16 21:30:43 by mli              ###   ########.fr        #
+#    Updated: 2021/11/25 23:05:40 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,10 +40,11 @@ class Recipe:
             exit()
 
     def __str__(self):
-        difficulty = [None, "not ", "not really ", "not too ", "a bit ", ""]
-        txt = """%s's recipe: takes %d minutes, and it's %sdifficult.
-        \rFor your %s, you will need : %s""" \
-        %(self.name, self.cooking_time, difficulty[self.cooking_lvl], self.recipe_type, ", ".join(self.ingredients))
+        difficulty = [None, "not", "not really", "not too", "a bit", "quite"]
+        txt = ("%s's recipe: takes %d minutes, and it's %s difficult.\n" \
+            "For your %s, you will need : %s" \
+            %(self.name, self.cooking_time, difficulty[self.cooking_lvl], \
+            self.recipe_type, ", ".join(self.ingredients)))
         if self.description != None and len(self.description) != 0:
             txt += "\nOh and here is a description of your meal!\n%s" %(self.description)
         return (txt)

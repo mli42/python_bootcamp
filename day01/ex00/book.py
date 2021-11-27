@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/15 12:30:57 by mli               #+#    #+#              #
-#    Updated: 2020/11/16 22:05:15 by mli              ###   ########.fr        #
+#    Updated: 2021/11/27 23:22:48 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,10 +14,14 @@ from datetime import datetime
 from recipe import Recipe
 
 class Book:
+    @staticmethod
+    def get_current_time() -> str:
+        return datetime.now().strftime("%d/%m/%Y %H:%M:%S.%f")
+
     def __init__(self, name="Cookbook"):
         self.name = name
-        self.creation_date = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-        self.last_update = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        self.creation_date = self.get_current_time()
+        self.last_update = self.creation_date
         self.recipes_list = {"starter" : [], "lunch" : [], "dessert" : []}
 
     def get_recipe_by_name(self, name: str) -> Recipe:
@@ -43,7 +47,7 @@ class Book:
             print("Given recipe is not a Recipe")
             return
         self.recipes_list[recipe.recipe_type].append(recipe)
-        last_update = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        self.last_update = self.get_current_time()
 
 if __name__ == "__main__":
     abc = Book()
