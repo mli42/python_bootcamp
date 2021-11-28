@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/15 17:45:09 by mli               #+#    #+#              #
-#    Updated: 2021/11/28 22:16:34 by mli              ###   ########.fr        #
+#    Updated: 2021/11/28 22:49:29 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,6 +27,8 @@ class Vector:
     def __init__(self, a):
         if isinstance(a, (list, int, range)) == False:
             raise ValueError("Vector inits with either list[float] / list[list[float]] / int / range")
+        if isinstance(a, int) and a < 0:
+            raise ValueError("size of range cannot be negative")
 
         values = []
         shape = ()
@@ -74,7 +76,7 @@ class Vector:
         else: # self.shape[1] > 1
             for a, b in zip(self.values, other.values):
                 res.append(a + b)
-        return (res)
+        return Vector(res)
 
     def __radd__(self, other):
         return self.__add__(other)
@@ -91,7 +93,7 @@ class Vector:
         else: # self.shape[1] > 1
             for a, b in zip(self.values, other.values):
                 res.append(a - b)
-        return (res)
+        return Vector(res)
 
     def __rsub__(self, other):
         return self.__sub__(other)
@@ -110,7 +112,7 @@ class Vector:
         else: # self.shape[1] > 1
             for a in self.values:
                 res.append(a / other)
-        return (res)
+        return Vector(res)
 
     def __rtruediv__(self, other):
         raise ValueError('A scalar cannot be divided by a Vector.')
@@ -127,7 +129,7 @@ class Vector:
         else: # self.shape[1] > 1
             for a in self.values:
                 res.append(a * other)
-        return (res)
+        return Vector(res)
 
     def __rmul__(self, other):
         return self.__mul__(other)
