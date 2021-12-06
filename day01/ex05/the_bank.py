@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/19 22:08:47 by mli               #+#    #+#              #
-#    Updated: 2021/12/06 22:52:02 by mli              ###   ########.fr        #
+#    Updated: 2021/12/06 23:16:20 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,8 @@ class Account(object):
     def __str__(self):
         name = self.name if hasattr(self, 'name') else None
         id = self.id if hasattr(self, 'id') else None
-        return f"Account(name: {name}, id: {id})"
+        value = self.value if hasattr(self, 'value') else None
+        return f"Account(name: {name}, id: {id}, value: {value})"
     def __repr__(self):
         return f"Account({self.__dict__})"
 
@@ -77,7 +78,7 @@ class Bank(object):
             not isinstance(dest, (int, str)) or \
             not isinstance(amount, float) or \
             amount < 0:
-            False
+            return False
         originAcc = self.get_account(origin)
         if self.account_validity(originAcc) is False or \
             originAcc.value < amount is False:
@@ -153,3 +154,13 @@ if __name__ == "__main__":
     fix_account(bankA, "A")
     fix_account(bankA, "D")
     fix_account(bankA, 6)
+
+    print("Accounts states:")
+    for acc in bankA.account: print(acc)
+
+    print("\nTransfers:")
+    print(bankA.transfer("B", "D", -20.0))
+    print(bankA.transfer("B", "D", 10.0))
+
+    print("\nAccounts states:")
+    for acc in bankA.account: print(acc)
