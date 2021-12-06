@@ -81,7 +81,7 @@ class Bank(object):
             return False
         originAcc = self.get_account(origin)
         if self.account_validity(originAcc) is False or \
-            originAcc.value < amount is False:
+            (originAcc.value < amount):
             return False
         destAcc = self.get_account(dest)
         if self.account_validity(destAcc) is False:
