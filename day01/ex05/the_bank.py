@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/19 22:08:47 by mli               #+#    #+#              #
-#    Updated: 2021/12/06 23:16:20 by mli              ###   ########.fr        #
+#    Updated: 2021/12/06 23:33:07 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -133,11 +133,11 @@ class Bank(object):
 if __name__ == "__main__":
     def fix_account(bank: Bank, id: int or str) -> None:
         acc = bank.get_account(id)
-        print(f'Fixing {acc}: ' + ('-' * 50), dir(acc), sep="\n")
+        print(f'Fixing {acc}: ' + ('-' * 50), repr(acc), sep="\n")
         print('IS VALID?', bankA.account_validity(acc))
         print('FIX?', bankA.fix_account(id))
         print('IS VALID?', bankA.account_validity(acc))
-        print(dir(acc), end="\n\n")
+        print(repr(acc), end="\n\n")
 
     empty_name_acc = Account("0")
     delattr(empty_name_acc, 'name')
