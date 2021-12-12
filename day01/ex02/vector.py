@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/15 17:45:09 by mli               #+#    #+#              #
-#    Updated: 2021/11/28 22:49:29 by mli              ###   ########.fr        #
+#    Updated: 2021/12/12 22:05:11 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,10 +25,14 @@ class Vector:
             for obj in arr])
 
     def __init__(self, a):
-        if isinstance(a, (list, int, range)) == False:
-            raise ValueError("Vector inits with either list[float] / list[list[float]] / int / range")
+        if isinstance(a, (list, int, tuple)) == False:
+            raise ValueError("Vector inits with either list[float] / list[list[float]] / int / tuple[int]")
         if isinstance(a, int) and a < 0:
             raise ValueError("size of range cannot be negative")
+        if isinstance(a, tuple) and ((len(a) != 2) or
+            not all([isinstance(obj, int) for obj in a]) or
+            (a[0] >= a[1])):
+            raise ValueError("wrong format of tuple (range constructor)")
 
         values = []
         shape = ()
@@ -41,11 +45,12 @@ class Vector:
                 shape = (len(a), 1)
             else:
                 raise ValueError("Vector list shape incorrect")
-        elif isinstance(a, (int, range)):
-            # size & range constructor
-            src_range = range(0, a) if isinstance(a, int) else a
-            values = [[float(nb)] for nb in src_range]
-            shape = (len(src_range), 1)
+        elif isinstance(a, int):
+            values = [[float(nb)] for nb in range(a)]
+            shape = (a, 1)
+        elif isinstance(a, tuple):
+            values = [[float(nb)] for nb in range(*a)]
+            shape = (a[1] - a[0], 1)
         else:
             raise Exception("Unexpected error")
         self.values = values
