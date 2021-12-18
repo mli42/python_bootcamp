@@ -6,35 +6,28 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/17 15:22:51 by mli               #+#    #+#              #
-#    Updated: 2020/01/19 12:33:44 by mli              ###   ########.fr        #
+#    Updated: 2021/12/18 23:15:03 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 import time
 from random import randint
-
-import inspect
-import getpass
-
-fcts = {"start_machine" : "Start Machine", "boil_water" : "Boil Water",
-        "make_coffee" : "Make Coffee", "add_water" : "Add Water"}
-username = getpass.getuser()
+import os
 
 def log(funct):
+    USERNAME = os.getenv("USER") or os.getenv("USERNAME") or "user"
+    DESCRIPTION = funct.__name__.replace('_', ' ').title()
     def inner(*args, **kwargs):
         with open("machine.log", 'a') as f:
-            f.write("(%s)Running: " %username)
-            for fct in fcts:
-                if (fct in inspect.stack()[1][4][0]):
-                    f.write("%s\t" %fcts[fct])
-                    break
+            f.write("(%s)Running: %-20s" %(USERNAME, DESCRIPTION))
             begin_time = time.time()
             return_value = funct(*args, **kwargs)
             exec_time = time.time() - begin_time
-            if (exec_time > 0.5):
-                f.write("[ exec-time = %.3f  s ]\n" %(exec_time))
-            else:
-                f.write("[ exec-time = %.3f ms ]\n" %(exec_time * 1000))
+            unit = "s"
+            if (exec_time < 0.5):
+                unit = "ms"
+                exec_time *= 1000
+            f.write("[ exec-time = %.3f %s ]\n" %(exec_time, unit))
         return (return_value)
     return (inner)
 
