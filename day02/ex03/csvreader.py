@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/19 12:38:56 by mli               #+#    #+#              #
-#    Updated: 2020/11/21 21:11:15 by mli              ###   ########.fr        #
+#    Updated: 2021/12/25 22:09:26 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,21 +14,18 @@ import csv
 
 class CsvReader():
     def __init__(self, filename=None, sep=',', header=False, skip_top=0, skip_bottom=0):
-        try:
-            if not isinstance(filename, str) or not isinstance(sep, str) \
-            or not isinstance(header, bool) or not isinstance(skip_top, int) \
-            or not isinstance(skip_bottom, int):
-                raise ValueError
-            self.filename = filename
-            self.sep = sep
-            self.header_b = header
-            self.skip_top = skip_top
-            self.skip_bottom = skip_bottom
-            self.fd = None
-            self.data = []
-            self.header = None
-        except ValueError:
-            exit(print("Given arguments not good"))
+        if not (isinstance(filename, str) and isinstance(sep, str)
+        and isinstance(header, bool) and isinstance(skip_top, int)
+        and isinstance(skip_bottom, int)):
+            exit("Given arguments not good")
+        self.filename = filename
+        self.sep = sep
+        self.has_header = header
+        self.skip_top = skip_top + header
+        self.skip_bottom = skip_bottom
+        self.fd = None
+        self.data = []
+        self.header = None
 
     def __enter__(self):
         try:
@@ -37,19 +34,25 @@ class CsvReader():
         except:
             return (None)
 
+        expected_len = None
         for i, row in enumerate(csv_reader):
             #row = [word.strip().strip("\"") for word in row]
-            for element in row:
-                if len(element) == 0:
-                    return None
-            if i == 0 and self.header_b is True:
+            if expected_len is None:
+                expected_len = len(row)
+            elif expected_len != len(row):
+                return None
+
+            if any([(len(element) == 0) for element in row]):
+                return None
+
+            if i == 0 and self.has_header is True:
                 self.header = row
             elif i >= self.skip_top and (self.skip_bottom == 0 or i < self.skip_bottom):
                 self.data.append(row)
         return (self)
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
-        if self.fd is not None:
+        if hasattr(self, 'fd') and self.fd is not None:
             self.fd.close()
 
     def getdata(self):
@@ -59,12 +62,16 @@ class CsvReader():
         return (self.header)
 
 if __name__ == "__main__":
-    with CsvReader("good.csv", header=True, skip_top=15) as file:
-        if file is None:
-            print("File not found or is corrupted")
-            exit()
-        print("Header:")
-        print("|%s|" %file.getheader())
-        print("Data:")
-        for data in file.getdata():
-            print("|%s|" %data)
+    def testReader(filename, sep, header, skip_top, skip_bottom):
+        with CsvReader(filename, sep, header, skip_top, skip_bottom) as reader:
+            if reader == None:
+                print("File is corrupted or missing")
+            else:
+                print('Header:', reader.getheader(), end = "\n")
+                print('Data  :', reader.getdata(), end = "\n\n")
+    testReader('good.csv', ',', False, 18, 0)
+    testReader('good.csv', ',', True, 17, 0)
+    testReader('bad.csv', ',', False, 18, 0)
+    testReader('bad.csv', ',', True, 17, 0)
+    testReader('mdr.csv', ',', False, 18, 0)
+    testReader('mdr.csv', ',', True, 17, 0)
