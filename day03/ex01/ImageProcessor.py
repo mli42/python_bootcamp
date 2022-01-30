@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/19 21:40:16 by mli               #+#    #+#              #
-#    Updated: 2022/01/29 16:19:35 by mli              ###   ########.fr        #
+#    Updated: 2022/01/30 17:21:55 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,6 +32,9 @@ class ImageProcessor:
 
     @staticmethod
     def display(array: np.ndarray):
+        if not isinstance(array, np.ndarray):
+            print("ImgProcessor.display: Parameter is not a numpy array", file=stderr)
+            return
         plt.axis("off")
         plt.imshow(array)
         plt.show()
