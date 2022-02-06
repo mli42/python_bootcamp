@@ -19,7 +19,8 @@ class ColorFilter:
     def __guard_ndarray(funct):
         def inner(*args, **kwargs):
             array = args[0]
-            if not (isinstance(array, np.ndarray) and array.dtype == 'float32'):
+            if not (isinstance(array, np.ndarray) and
+            ('float' in str(array.dtype) or 'int' in str(array.dtype))):
                 return None
             try:
                 return_value = funct(*args, **kwargs)
@@ -31,7 +32,9 @@ class ColorFilter:
     @staticmethod
     @__guard_ndarray
     def invert(array: np.ndarray) -> np.ndarray:
-        return 1 - array[..., :3]
+        res = 1 - array
+        res[..., 3:] = array[..., 3:]
+        return res
 
     @staticmethod
     @__guard_ndarray
@@ -50,8 +53,10 @@ class ColorFilter:
     @staticmethod
     @__guard_ndarray
     def to_red(array: np.ndarray) -> np.ndarray:
-        self = ColorFilter()
-        res = array[..., :3] - (self.to_blue(array) + self.to_green(array))[..., :3]
+        only_blue_green = ColorFilter.to_blue(array) + ColorFilter.to_green(array)
+
+        res = array - only_blue_green
+        res[..., 3:] = array[..., 3:]
         return res
 
 def main():
