@@ -72,6 +72,28 @@ class ColorFilter:
             lower_bound = upper_bound
         return res
 
+    @staticmethod
+    def __guard_grayscale(filter: str, **kwargs) -> bool:
+        weights = kwargs.get('weights')
+        hasWeights = weights is not None
+
+        if (
+            (filter not in ['m', 'mean', 'w', 'weight']) or
+            (filter in ['m', 'mean'] and hasWeights) or
+            (not isinstance(weights, list)) or
+            (len(weights) != 3) or
+            (all([isinstance(obj, float) for obj in weights]))
+          ):
+            return False
+        return True
+
+    @staticmethod
+    @__guard_ndarray
+    def to_grayscale(array: np.ndarray, filter: str, **kwargs) -> np.ndarray:
+        if ColorFilter.__guard_grayscale(filter, **kwargs) is False:
+            return None
+        return array
+
 
 def main():
     imgProc = ImageProcessor()
@@ -88,25 +110,42 @@ def main():
         if img is None:
             print('Img is None')
             return
-        base_ope = ('Base img', lambda x: x)
+        base_ope = ('Base img', lambda x: x, [], {})
         arr = [
             base_ope,
-            ('Inverted', cfilter.invert),
-            ('To blue', cfilter.to_blue),
-            ('To green', cfilter.to_green),
-            ('To red', cfilter.to_red),
-            ('To celluloid', cfilter.to_celluloid),
+            ('Inverted', cfilter.invert, [], {}),
+            ('To blue', cfilter.to_blue, [], {}),
+            ('To green', cfilter.to_green, [], {}),
+            ('To red', cfilter.to_red, [], {}),
+            ('To celluloid', cfilter.to_celluloid, [], {}),
+            ('To grayscale m', cfilter.to_grayscale, ['m'], {}),
+            ('To grayscale mean', cfilter.to_grayscale, ['mean'], {}),
+            ('To grayscale w', cfilter.to_grayscale, ['w'], {'weights': [1., 2., 3.]}),
+            ('To grayscale weight', cfilter.to_grayscale, ['weight'], {'weights': [1., 2., 3.]}),
             base_ope
         ]
 
-        for label, fct in arr:
+        for label, fct, args, kwargs in arr:
             print(label)
-            display_img(fct(img))
+            display_img(fct(img, *args, **kwargs))
+
+    def grayscale_err(img):
+        arr = [
+            ('Args err', ['hey'], {'weights': [1., 2., 3.]}),
+            ('Kwargs err', ['m'], {'hey': 123}),
+            ('Weight value', ['m'], {'weights': 123}),
+            ('Mean with weight', ['m'], {'weights': [1., 2., 3.]}),
+        ]
+        for label, args, kwargs in arr:
+            print(label)
+            display_img(cfilter.to_grayscale(img, *args, **kwargs))
 
     print('Trying with Elon')
     launch_filters(elon)
     print('Trying with inverted Elon')
     launch_filters(cfilter.invert(elon))
+    print('Check grayscale guardian')
+    grayscale_err(elon)
 
 if __name__ == "__main__":
     main()
