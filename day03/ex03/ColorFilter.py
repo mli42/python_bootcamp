@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/24 22:42:30 by mli               #+#    #+#              #
-#    Updated: 2022/02/06 00:56:15 by mli              ###   ########.fr        #
+#    Updated: 2022/02/27 16:35:00 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -59,6 +59,20 @@ class ColorFilter:
         res[..., 3:] = array[..., 3:]
         return res
 
+    @staticmethod
+    @__guard_ndarray
+    def to_celluloid(array: np.ndarray) -> np.ndarray:
+        bounds = np.linspace(array.min(), array.max(), 5)
+        res = array.copy()
+
+        lower_bound = bounds[0]
+        for upper_bound in bounds[1:]:
+            mask = (res[..., :3] > lower_bound) & (res[..., :3] < upper_bound)
+            res[..., :3][mask] = lower_bound
+            lower_bound = upper_bound
+        return res
+
+
 def main():
     imgProc = ImageProcessor()
     cfilter = ColorFilter()
@@ -74,18 +88,20 @@ def main():
         if img is None:
             print('Img is None')
             return
-        print('Base img')
-        display_img(img)
-        print('Inverted')
-        display_img(cfilter.invert(img))
-        print('To blue')
-        display_img(cfilter.to_blue(img))
-        print('To green')
-        display_img(cfilter.to_green(img))
-        print('To red')
-        display_img(cfilter.to_red(img))
-        print('Base img')
-        display_img(img)
+        base_ope = ('Base img', lambda x: x)
+        arr = [
+            base_ope,
+            ('Inverted', cfilter.invert),
+            ('To blue', cfilter.to_blue),
+            ('To green', cfilter.to_green),
+            ('To red', cfilter.to_red),
+            ('To celluloid', cfilter.to_celluloid),
+            base_ope
+        ]
+
+        for label, fct in arr:
+            print(label)
+            display_img(fct(img))
 
     print('Trying with Elon')
     launch_filters(elon)
