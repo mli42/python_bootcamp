@@ -74,15 +74,18 @@ class ColorFilter:
 
     @staticmethod
     def __guard_grayscale(filter: str, **kwargs) -> bool:
-        weights = kwargs.get('weights')
+        weights = kwargs.pop('weights', None)
         hasWeights = weights is not None
 
         if (
+            (len(kwargs) != 0) or
             (filter not in ['m', 'mean', 'w', 'weight']) or
             (filter in ['m', 'mean'] and hasWeights) or
-            (not isinstance(weights, list)) or
-            (len(weights) != 3) or
-            (all([isinstance(obj, float) for obj in weights]))
+            (filter in ['w', 'weight'] and (
+                not isinstance(weights, list) or
+                len(weights) != 3 or
+                not all([isinstance(obj, float) for obj in weights]))
+                )
           ):
             return False
         return True
@@ -135,9 +138,13 @@ def main():
             ('Kwargs err', ['m'], {'hey': 123}),
             ('Weight value', ['m'], {'weights': 123}),
             ('Mean with weight', ['m'], {'weights': [1., 2., 3.]}),
+            ('Weight tuple', ['w'], {'weights': (1., 2., 3.)}),
+            ('Weight intruder', ['w'], {'weights': [1., 2., 3]}),
+            ('Too much float', ['w'], {'weights': [1., 2., 3., 4.]}),
+            ('Too much kwargs', ['w'], {'weights': [1., 2., 3.], 'hey': 'a'}),
         ]
         for label, args, kwargs in arr:
-            print(label)
+            print(label, end=': ')
             display_img(cfilter.to_grayscale(img, *args, **kwargs))
 
     print('Trying with Elon')
