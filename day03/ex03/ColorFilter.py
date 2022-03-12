@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/24 22:42:30 by mli               #+#    #+#              #
-#    Updated: 2022/02/27 16:35:00 by mli              ###   ########.fr        #
+#    Updated: 2022/03/12 23:30:33 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -84,8 +84,9 @@ class ColorFilter:
             (filter in ['w', 'weight'] and (
                 not isinstance(weights, list) or
                 len(weights) != 3 or
-                not all([isinstance(obj, float) for obj in weights]))
-                )
+                not all([isinstance(obj, float) and obj >= 0 for obj in weights]) or
+                np.sum(weights) != 1.
+                ))
           ):
             return False
         return True
@@ -95,7 +96,19 @@ class ColorFilter:
     def to_grayscale(array: np.ndarray, filter: str, **kwargs) -> np.ndarray:
         if ColorFilter.__guard_grayscale(filter, **kwargs) is False:
             return None
-        return array
+        weights = kwargs.get('weights')
+        res = array.copy()
+
+        if (filter in ['m', 'mean']):
+            mono = np.sum(res[..., :3], axis=2, keepdims=True) / 3
+            res = np.dstack((np.tile(mono, 3), res[..., 3:]))
+        elif (filter in ['w', 'weight']):
+            res[..., 0] *= weights[0]
+            res[..., 1] *= weights[1]
+            res[..., 2] *= weights[2]
+            mono = np.sum(res[..., :3], axis=2, keepdims=True)
+            res = np.dstack((np.tile(mono, 3), res[..., 3:]))
+        return res
 
 
 def main():
@@ -123,8 +136,8 @@ def main():
             ('To celluloid', cfilter.to_celluloid, [], {}),
             ('To grayscale m', cfilter.to_grayscale, ['m'], {}),
             ('To grayscale mean', cfilter.to_grayscale, ['mean'], {}),
-            ('To grayscale w', cfilter.to_grayscale, ['w'], {'weights': [1., 2., 3.]}),
-            ('To grayscale weight', cfilter.to_grayscale, ['weight'], {'weights': [1., 2., 3.]}),
+            ('To grayscale w', cfilter.to_grayscale, ['w'], {'weights': [.2, .3, .5]}),
+            ('To grayscale weight', cfilter.to_grayscale, ['weight'], {'weights': [.6, .2, .2]}),
             base_ope
         ]
 
@@ -134,14 +147,16 @@ def main():
 
     def grayscale_err(img):
         arr = [
-            ('Args err', ['hey'], {'weights': [1., 2., 3.]}),
+            ('Args err', ['hey'], {'weights': [.8, .1, .1]}),
             ('Kwargs err', ['m'], {'hey': 123}),
             ('Weight value', ['m'], {'weights': 123}),
-            ('Mean with weight', ['m'], {'weights': [1., 2., 3.]}),
-            ('Weight tuple', ['w'], {'weights': (1., 2., 3.)}),
-            ('Weight intruder', ['w'], {'weights': [1., 2., 3]}),
-            ('Too much float', ['w'], {'weights': [1., 2., 3., 4.]}),
-            ('Too much kwargs', ['w'], {'weights': [1., 2., 3.], 'hey': 'a'}),
+            ('Mean with weight', ['m'], {'weights': [.8, .1, .1]}),
+            ('Weight tuple', ['w'], {'weights': (.8, .1, .1)}),
+            ('Weight intruder', ['w'], {'weights': [1., 2., 'a']}),
+            ('Too much float', ['w'], {'weights': [.8, .1, .1, .0]}),
+            ('Too high float', ['w'], {'weights': [.8, .1, .2]}),
+            ('Too much kwargs', ['w'], {'weights': [.8, .1, .1], 'hey': 'a'}),
+            ('Negativ float', ['w'], {'weights': [.8, -.1, .3]}),
         ]
         for label, args, kwargs in arr:
             print(label, end=': ')
