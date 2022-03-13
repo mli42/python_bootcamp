@@ -97,17 +97,14 @@ class ColorFilter:
         if ColorFilter.__guard_grayscale(filter, **kwargs) is False:
             return None
         weights = kwargs.get('weights')
-        res = array.copy()
+        res = None
 
         if (filter in ['m', 'mean']):
-            mono = np.sum(res[..., :3], axis=2, keepdims=True) / 3
-            res = np.dstack((np.tile(mono, 3), res[..., 3:]))
+            mono = np.sum(array[..., :3], axis=2, keepdims=True) / 3
+            res = np.dstack((np.tile(mono, 3), array[..., 3:]))
         elif (filter in ['w', 'weight']):
-            res[..., 0] *= weights[0]
-            res[..., 1] *= weights[1]
-            res[..., 2] *= weights[2]
-            mono = np.sum(res[..., :3], axis=2, keepdims=True)
-            res = np.dstack((np.tile(mono, 3), res[..., 3:]))
+            mono = np.sum(array[..., :3] * weights, axis=2, keepdims=True)
+            res = np.dstack((np.tile(mono, 3), array[..., 3:]))
         return res
 
 
