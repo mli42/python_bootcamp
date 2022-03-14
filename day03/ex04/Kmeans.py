@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/08 17:04:24 by mli               #+#    #+#              #
-#    Updated: 2022/03/14 00:21:33 by mli              ###   ########.fr        #
+#    Updated: 2022/03/14 01:01:57 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -103,11 +103,17 @@ def main():
     if ARGV is None:
         print_usage()
         return
-    data = np.genfromtxt(ARGV[0], delimiter=",", skip_header=1)
-    X = data[:, 1:] # Delete index
-    ncentroid = 4
+    try:
+        data = np.genfromtxt(ARGV[0], delimiter=",", skip_header=1)
+    except Exception as e:
+        print(e)
+        return
 
-    kms = KmeansClustering(ncentroid=ncentroid)
+    X = data[:, 1:] # Delete index
+    ncentroid = int(ARGV[1])
+    max_iter = int(ARGV[2])
+
+    kms = KmeansClustering(max_iter=max_iter ,ncentroid=ncentroid)
     kms.fit(X)
     kms.predict(X)
     kms.fig_3D(X)
