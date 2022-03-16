@@ -55,7 +55,8 @@ class KmeansClustering:
 
     def fig_3D(self, X: np.ndarray) -> None:
         fig = plt.figure()
-        ax = Axes3D(fig)
+        ax = Axes3D(fig, auto_add_to_figure=False)
+        fig.add_axes(ax)
 
         cluster_labels = self.cluster_labels
         cluster_centers = self.centroids
@@ -66,10 +67,15 @@ class KmeansClustering:
 
         colorstr = ["red", "blue", "green", "purple"]
         for i in range(self.ncentroid):
-            ax.scatter(X[cluster_labels == i, 0], X[cluster_labels == i, 1],
-                    X[cluster_labels == i, 2], color=colorstr[i])
-            ax.scatter(cluster_centers[i, 0], cluster_centers[i, 1],
-                    cluster_centers[i, 2], color=colorstr[i], marker="o", s=150, label="centroids")
+            mask = cluster_labels == i
+            center = cluster_centers[i]
+            color = colorstr[i] if (i < len(colorstr)) else None
+
+            print(f'{sum(mask)} individuals for {color} centroid ({i}) with coordinates {center}')
+
+            ax.scatter(X[mask, 0], X[mask, 1], X[mask, 2], color=color)
+            ax.scatter(center[0], center[1], center[2], color=color,
+                marker="o", s=150, label="centroids")
         plt.show()
 
 ARGS_NAME = ['filepath', 'ncentroid', 'max_iter']
