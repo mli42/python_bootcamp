@@ -56,11 +56,19 @@ class NumPyCreator:
     def from_iterable(itr):
         if not hasattr(itr, '__iter__'):
             return None
-        return (np.fromiter(itr, int))
+        value = list(itr)
+        if len(value) == 0:
+            return np.array([])
+        dtype = type(value[0])
+        if not all([isinstance(obj, dtype) for obj in value]):
+            return None
+        return (np.array(value))
 
     @staticmethod
     def from_shape(shape, value=0):
         if not (NumPyCreator.__guard_shape(shape)):
+            return None
+        if not (isinstance(value, int) and value >= 0):
             return None
         return (np.full(shape, value))
 
