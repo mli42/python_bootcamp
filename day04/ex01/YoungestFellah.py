@@ -6,24 +6,45 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/02 16:43:22 by mli               #+#    #+#              #
-#    Updated: 2020/12/02 22:49:46 by mli              ###   ########.fr        #
+#    Updated: 2022/03/25 00:11:35 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 import pandas as pd
+from numpy import NaN
 from FileLoader import FileLoader
 
 def youngestFellah(df: pd.DataFrame, year: int) -> dict:
-    df_that_year = df[df["Year"]==year]
-    df_that_year = df_that_year.sort_values(by=["Age"])
-    first = df_that_year.iloc[0]
-    i = 1
-    while df_that_year.iloc[i]["Sex"] == first["Sex"]:
-        i += 1
-    second = df_that_year.iloc[i]
-    return {first["Sex"]: first["Age"], second["Sex"]: second["Age"]}
+    """
+    Get the name of the youngest woman and man for the given year.
+    Args:
+        df: pandas.DataFrame object containing the dataset.
+        year: integer corresponding to a year.
+    Returns:
+        dct: dictionary with 2 keys for female and male athlete.
+    """
+    df = df[df["Year"]==year].loc[:, ["Sex", "Age"]].sort_values(by=["Age"])
+    if len(df) == 0:
+        return { 'F': NaN, 'M': NaN }
+    first = df.iloc[0]
+
+    df_second_sex = df.loc[lambda x: x["Sex"] != first["Sex"]]
+    second_age = df_second_sex.iloc[0]["Age"] if len(df_second_sex) != 0 else NaN
+    second_sex = 'F' if first["Sex"] == 'M' else 'M'
+    return dict(sorted(
+        { first["Sex"]: first["Age"], second_sex: second_age }.items(),
+        key=lambda x: x[0]
+    ))
+
+def main():
+    loader = FileLoader()
+    data = loader.load('../resources/athlete_events.csv')
+    print(youngestFellah(data, 1992)) # {'F': 12.0, 'M': 11.0}
+    print(youngestFellah(data, 2004)) # {'F': 13.0, 'M': 14.0}
+    print(youngestFellah(data, 2010)) # {'F': 15.0, 'M': 15.0}
+
+    print(youngestFellah(data, 1991)) # {'F': NaN, 'M': NaN}
+    print(youngestFellah(data, 2003)) # {'F': NaN, 'M': NaN}
 
 if __name__ == "__main__":
-    loader = FileLoader()
-    data = loader.load('./resources/athlete_events.csv')
-    print(youngestFellah(data, 2004)) # {'F': 13.0, 'M': 14.0}
+    main()
