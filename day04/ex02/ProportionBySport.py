@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/03 18:58:21 by mli               #+#    #+#              #
-#    Updated: 2020/12/05 22:39:51 by mli              ###   ########.fr        #
+#    Updated: 2022/03/28 23:18:42 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,12 +23,21 @@ def proportionBySport(df: pd.DataFrame, yr: int, sport: str, gdr: str) -> float:
                the participants of the given gender.
     """
     df = df[(df["Year"]==yr) & (df["Sex"]==gdr)]
-    df = df[~df.duplicated(subset=["ID"])]
+    # df = df[~df.duplicated(subset=["ID"])]
     df_res = df[df["Sport"]==sport]
     return (df_res.shape[0] / df.shape[0])
 
-if __name__ == "__main__":
+def main():
     loader = FileLoader()
-    data = loader.load('./resources/athlete_events.csv')
-    print(proportionBySport(data, 2004, 'Tennis', 'F')) # 0.019302325581395347
-    print(0.01935634328358209, "-> Example's Result") # Given by removing names duplicates
+    data = loader.load('../resources/athlete_events.csv')
+
+    def test(year, sport, gender, expected):
+        print(proportionBySport(data, year, sport, gender))
+        print(expected, " <-- Expected\n")
+
+    test(2004, 'Tennis', 'F', "0.02307")
+    test(2008, 'Hockey', 'F', "0.03284")
+    test(1964, 'Biathlon', 'M', "0.00659")
+
+if __name__ == "__main__":
+    main()

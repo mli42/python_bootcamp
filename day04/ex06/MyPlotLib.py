@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/06 18:45:06 by mli               #+#    #+#              #
-#    Updated: 2020/12/07 13:31:29 by mli              ###   ########.fr        #
+#    Updated: 2022/03/29 00:37:36 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,12 +43,15 @@ class MyPlotLib:
         ax.boxplot(df[features].dropna(), labels=features)
         plt.show()
 
-if __name__ == "__main__":
+def main():
     loader = FileLoader()
-    data = loader.load('./resources/athlete_events.csv')
+    data = loader.load('../resources/athlete_events.csv')
     mpl = MyPlotLib()
 
     mpl.histogram(data, ["Height", "Weight"])
     mpl.density(data, ["Weight", "Height"])
     mpl.pair_plot(data, ["Weight", "Height"])
     mpl.box_plot(data, ["Weight", "Height"])
+
+if __name__ == "__main__":
+    main()
