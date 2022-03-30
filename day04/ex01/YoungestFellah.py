@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/02 16:43:22 by mli               #+#    #+#              #
-#    Updated: 2022/03/25 00:11:35 by mli              ###   ########.fr        #
+#    Updated: 2022/03/31 00:47:27 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,9 +23,13 @@ def youngestFellah(df: pd.DataFrame, year: int) -> dict:
     Returns:
         dct: dictionary with 2 keys for female and male athlete.
     """
+    default_res = { 'F': NaN, 'M': NaN }
+
+    if not (isinstance(df, pd.DataFrame) and isinstance(year, int)):
+        return default_res
     df = df[df["Year"]==year].loc[:, ["Sex", "Age"]].sort_values(by=["Age"])
     if len(df) == 0:
-        return { 'F': NaN, 'M': NaN }
+        return default_res
     first = df.iloc[0]
 
     df_second_sex = df.loc[lambda x: x["Sex"] != first["Sex"]]
@@ -45,6 +49,8 @@ def main():
 
     print(youngestFellah(data, 1991)) # {'F': NaN, 'M': NaN}
     print(youngestFellah(data, 2003)) # {'F': NaN, 'M': NaN}
+
+    print(youngestFellah(data, "1992")) # {'F': NaN, 'M': NaN}
 
 if __name__ == "__main__":
     main()

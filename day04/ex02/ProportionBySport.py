@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/03 18:58:21 by mli               #+#    #+#              #
-#    Updated: 2022/03/28 23:18:42 by mli              ###   ########.fr        #
+#    Updated: 2022/03/31 00:51:18 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,6 +22,9 @@ def proportionBySport(df: pd.DataFrame, yr: int, sport: str, gdr: str) -> float:
         float: Percentage of participants who played the given sport among
                the participants of the given gender.
     """
+    if not (isinstance(df, pd.DataFrame) and isinstance(yr, int) and
+        isinstance(sport, str) and gdr in ['F', 'M']):
+        return None
     df = df[(df["Year"]==yr) & (df["Sex"]==gdr)]
     # df = df[~df.duplicated(subset=["ID"])]
     df_res = df[df["Sport"]==sport]
@@ -38,6 +41,8 @@ def main():
     test(2004, 'Tennis', 'F', "0.02307")
     test(2008, 'Hockey', 'F', "0.03284")
     test(1964, 'Biathlon', 'M', "0.00659")
+
+    test(1964, 'Biathlon', 'G', "None")
 
 if __name__ == "__main__":
     main()

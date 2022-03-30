@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/06 18:45:06 by mli               #+#    #+#              #
-#    Updated: 2022/03/30 00:23:00 by mli              ###   ########.fr        #
+#    Updated: 2022/03/31 00:39:48 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ class MyPlotLib:
                 return None
             columns = df.columns.values
             if not (isinstance(features, list) and
-                all([(isinstance(obj, str) and obj in columns) for obj in features])):
+                all([(isinstance(obj, str) and (obj in columns) and df[obj].dtype.kind in 'iuf') for obj in features])):
                 return None
             return_value = funct(df, features)
             return return_value
@@ -68,6 +68,8 @@ def main():
     mpl.density(data, ["Weight", "Height"])
     mpl.pair_plot(data, ["Weight", "Height"])
     mpl.box_plot(data, ["Weight", "Height"])
+
+    mpl.box_plot(data, ["Weight", "Medal"])
 
 if __name__ == "__main__":
     main()

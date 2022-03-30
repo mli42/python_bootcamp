@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/06 16:25:48 by mli               #+#    #+#              #
-#    Updated: 2022/03/28 23:40:40 by mli              ###   ########.fr        #
+#    Updated: 2022/03/31 00:54:16 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,6 +14,8 @@ import pandas as pd
 from FileLoader import FileLoader
 
 def howManyMedals(df: pd.DataFrame, name: str) -> dict:
+    if not (isinstance(df, pd.DataFrame) and isinstance(name, str)):
+        return None
     res = dict()
     df = df[(df["Name"] == name)]
     for index, row in df.iterrows():
@@ -48,6 +50,8 @@ def main():
     test('Gary Abraham', {1976: {'G': 0, 'S': 0, 'B': 0}, 1980: {'G': 0, 'S': 0, 'B': 1}})
     test('Yekaterina Konstantinovna Abramova', {2006: {'G': 0, 'S': 0, 'B': 1}, 2010: {'G': 0, 'S': 0, 'B': 0}})
     test('Kristin Otto', {1988: {'G': 6, 'S': 0, 'B': 0}})
+
+    test(None, None)
 
 if __name__ == "__main__":
     main()
