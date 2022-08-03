@@ -2,12 +2,12 @@
 
 This is my implementation for 42AI's bootcamp
 
-day00 to day04: [Bootcamp Python](https://github.com/42-AI/bootcamp_python)
+### day00 to day04: [Bootcamp Python](https://github.com/42-AI/bootcamp_python)
 - [x] Basics (variables, functions, generator, construtors, iterator, decorators)
 - [x] Introduction to Numpy (NumPy array, slicing, stacking, dimensions, broadcasting, normalization)
 - [x] Introduction to Pandas (Pandas DataFrame)
 
-day05 to day09: [Bootcamp Machine Learning (Python)](https://github.com/42-AI/bootcamp_machine-learning)
+### day05 to day09: [Bootcamp Machine Learning (Python)](https://github.com/42-AI/bootcamp_machine-learning)
 - [x] Get started with some **linear algebra** and **statistics**
 > Sum, mean, variance, standard deviation, vectors and matrices operations.
 > Hypothesis, model, regression, cost function.
