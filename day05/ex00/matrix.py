@@ -6,24 +6,82 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/07 18:36:21 by mli               #+#    #+#              #
-#    Updated: 2022/08/03 19:14:35 by mli              ###   ########.fr        #
+#    Updated: 2022/08/04 16:47:59 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
+from copy import deepcopy
+from typing import List, Tuple
+
 class Matrix:
-    def __init__(self, elements: list = None, shape: tuple = None) -> None:
-        if isinstance(elements, list):
-            self.data = elements.copy()
-            self.shape = (len(elements), len(elements[0]))
-        elif isinstance(shape, tuple):
-            self.shape = shape
-            self.data = [[0] * self.shape[1] for tmp in range(self.shape[0])]
+
+    @staticmethod
+    def __check_shape(shape: Tuple) -> bool:
+        """ Check if given parameter is a shape
+        Args:
+            shape (Tuple): should be (x, y)
+        Returns:
+            bool: True if is a shape, False otherwise
+        """
+        if not isinstance(shape, tuple) or len(shape) != 2:
+            return False
+        return all([isinstance(obj, int) for obj in shape])
+
+
+    @staticmethod
+    def __check_data_shape(data: List) -> Tuple or None:
+        """ Check if given parameter has a correct data shape (x, y)
+        Args:
+            shape (Tuple): should be (x, y)
+        Returns:
+            Tuple: shape if the format is good
+            None otherwise
+        """
+        rows, cols = 0, 0
+        if not isinstance(data, list) or not all([isinstance(obj, list) for obj in data]):
+            return None
+        for i, row in enumerate(data):
+            if not all([isinstance(obj, float) for obj in row]):
+                return None
+            if i == 0:
+                cols = len(row)
+            elif cols != len(row):
+                return None
+            rows += 1
+        return (rows, cols)
+
+
+    def __init__(self, param: List or Tuple[float, float]) -> None:
+        """ Initialize the Matrix
+        Args:
+            param (List or Tuple):
+                - List => elements of the matrix
+                - Tuple => shape of the matrix, filled with zeros
+        """
+        potential_shape = self.__check_data_shape(param)
+        if potential_shape is not None:
+            self.data = deepcopy(param)
+            self.shape = potential_shape
+        elif self.__check_shape(param):
+            self.shape = param
+            self.data = [[0] * self.shape[1] for _ in range(self.shape[0])]
+        else:
+            raise ValueError("Incorrect initialization of Matrix")
+
+
+    def T(self):
+        transposed = Matrix(self.shape[::-1])
+        for j, rows in enumerate(self.data):
+            for i, data in enumerate(rows):
+                transposed.data[i][j] = data
+        return transposed
+
 
     def __add__(self, other):
         # add : vectors and matrices, can have errors with vectors and matrices.
         if isinstance(other, Matrix) and self.shape != other.shape:
             return
-        res = Matrix(shape=(self.shape))
+        res = Matrix(self.shape)
         for i in range(res.shape[0]):
             for j in range(res.shape[1]):
                 res.data[i][j] = self.data[i][j] + other.data[i][j]
@@ -33,7 +91,7 @@ class Matrix:
         # sub : vectors and matrices, can have errors with vectors and matrices.
         if isinstance(other, Matrix) and self.shape != other.shape:
             return
-        res = Matrix(shape=(self.shape))
+        res = Matrix(self.shape)
         for i in range(res.shape[0]):
             for j in range(res.shape[1]):
                 res.data[i][j] = self.data[i][j] - other.data[i][j]
@@ -43,7 +101,7 @@ class Matrix:
         # div : only scalars.
         if not isinstance(other, (int, float)):
             return
-        res = Matrix(shape=(self.shape))
+        res = Matrix(self.shape)
         for i in range(res.shape[0]):
             for j in range(res.shape[1]):
                 res.data[i][j] = self.data[i][j] / other
@@ -54,13 +112,13 @@ class Matrix:
         # if we perform Matrix * Vector (dot product), return a Vector.
         res = None
         if isinstance(other, (int, float)):
-            res = Matrix(shape=(self.shape))
+            res = Matrix(self.shape)
             for i in range(res.shape[0]):
                 for j in range(res.shape[1]):
                     res.data[i][j] = self.data[i][j] * other
         elif isinstance(other, Matrix):
             common_len = self.shape[1]
-            res = Matrix(shape=(self.shape[0], other.shape[1]))
+            res = Matrix((self.shape[0], other.shape[1]))
             for i in range(res.shape[0]):
                 for j in range(res.shape[1]):
                     res.data[i][j] = sum([self.data[i][k] * other.data[k][j] for k in range(common_len)])
@@ -79,3 +137,7 @@ class Matrix:
         return "Matrix(%s)" %(self.data)
     def __repr__(self) -> str:
         return "Matrix(%s)" %(self.data)
+
+
+class Vector(Matrix):
+    ...
