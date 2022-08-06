@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/07 18:36:21 by mli               #+#    #+#              #
-#    Updated: 2022/08/06 18:43:02 by mli              ###   ########.fr        #
+#    Updated: 2022/08/06 19:24:12 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -153,3 +153,12 @@ class Vector(Matrix):
         super().__init__(param)
         if self.shape[0] != 1 and self.shape[1] != 1:
             raise ValueError('Vector has incorrect shape')
+
+    def dot(self, other) -> int or float:
+        if not isinstance(other, Vector) or self.shape != other.shape:
+            raise ValueError('Argument must be vector of same shape')
+        if self.shape[0] == 1:
+            res = self * other.T()
+        else:
+            res = self.T() * other
+        return res.data[0][0]

@@ -61,5 +61,16 @@ class MyTestCase(unittest.TestCase):
 
         self.assertEqual(repr(8 * v1), "Vector([[8], [16], [24]])")
 
+    def test_dot(self):
+        v1 = Vector([[1], [3], [-5]])
+        v2 = Vector([[4], [-2], [-1]])
+
+        self.assertEqual(v1.dot(v2), 3)
+
+        v1 = Vector([[1, 3, -5]])
+        v2 = Vector([[4, -2, -1]])
+
+        self.assertEqual(v1.dot(v2), 3)
+
 if __name__ == '__main__':
     unittest.main()
