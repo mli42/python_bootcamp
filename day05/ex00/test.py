@@ -4,7 +4,7 @@ import unittest
 
 class MyTestCase(unittest.TestCase):
 
-    def vector_basics(self):
+    def test_vector_basics(self):
         v1 = Vector([[1, 2, 3]]) # create a row vector
         v2 = Vector([[1], [2], [3]]) # create a column vec
 
@@ -46,7 +46,7 @@ class MyTestCase(unittest.TestCase):
                     [0.0, 2.0, 4.0]])
         v1 = Vector([[1], [2], [3]])
 
-        self.assertIn(repr(m1 * v1), ("Matrix([[8], [16]])", "Vector([[8], [16]"))
+        self.assertIn(repr(m1 * v1), ("Matrix([[8.0], [16.0]])", "Vector([[8.0], [16.0]"))
 
 
     def test_subject_4(self):
@@ -54,6 +54,12 @@ class MyTestCase(unittest.TestCase):
         v2 = Vector([[2], [4], [8]])
 
         self.assertEqual(repr(v1 + v2), "Vector([[3], [6], [11]])")
+
+
+    def test_custom_1(self):
+        v1 = Vector([[1], [2], [3]])
+
+        self.assertEqual(repr(8 * v1), "Vector([[8], [16], [24]])")
 
 if __name__ == '__main__':
     unittest.main()

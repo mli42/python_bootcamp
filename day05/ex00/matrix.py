@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/07 18:36:21 by mli               #+#    #+#              #
-#    Updated: 2022/08/04 16:47:59 by mli              ###   ########.fr        #
+#    Updated: 2022/08/06 18:43:02 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,7 @@ class Matrix:
         if not isinstance(data, list) or not all([isinstance(obj, list) for obj in data]):
             return None
         for i, row in enumerate(data):
-            if not all([isinstance(obj, float) for obj in row]):
+            if not all([isinstance(obj, (int, float)) for obj in row]):
                 return None
             if i == 0:
                 cols = len(row)
@@ -58,6 +58,7 @@ class Matrix:
                 - List => elements of the matrix
                 - Tuple => shape of the matrix, filled with zeros
         """
+        self.constructor = type(self)
         potential_shape = self.__check_data_shape(param)
         if potential_shape is not None:
             self.data = deepcopy(param)
@@ -70,7 +71,7 @@ class Matrix:
 
 
     def T(self):
-        transposed = Matrix(self.shape[::-1])
+        transposed = self.constructor(self.shape[::-1])
         for j, rows in enumerate(self.data):
             for i, data in enumerate(rows):
                 transposed.data[i][j] = data
@@ -81,7 +82,7 @@ class Matrix:
         # add : vectors and matrices, can have errors with vectors and matrices.
         if isinstance(other, Matrix) and self.shape != other.shape:
             return
-        res = Matrix(self.shape)
+        res = self.constructor(self.shape)
         for i in range(res.shape[0]):
             for j in range(res.shape[1]):
                 res.data[i][j] = self.data[i][j] + other.data[i][j]
@@ -91,7 +92,7 @@ class Matrix:
         # sub : vectors and matrices, can have errors with vectors and matrices.
         if isinstance(other, Matrix) and self.shape != other.shape:
             return
-        res = Matrix(self.shape)
+        res = self.constructor(self.shape)
         for i in range(res.shape[0]):
             for j in range(res.shape[1]):
                 res.data[i][j] = self.data[i][j] - other.data[i][j]
@@ -101,7 +102,7 @@ class Matrix:
         # div : only scalars.
         if not isinstance(other, (int, float)):
             return
-        res = Matrix(self.shape)
+        res = self.constructor(self.shape)
         for i in range(res.shape[0]):
             for j in range(res.shape[1]):
                 res.data[i][j] = self.data[i][j] / other
@@ -112,13 +113,13 @@ class Matrix:
         # if we perform Matrix * Vector (dot product), return a Vector.
         res = None
         if isinstance(other, (int, float)):
-            res = Matrix(self.shape)
+            res = self.constructor(self.shape)
             for i in range(res.shape[0]):
                 for j in range(res.shape[1]):
                     res.data[i][j] = self.data[i][j] * other
         elif isinstance(other, Matrix):
             common_len = self.shape[1]
-            res = Matrix((self.shape[0], other.shape[1]))
+            res = self.constructor((self.shape[0], other.shape[1]))
             for i in range(res.shape[0]):
                 for j in range(res.shape[1]):
                     res.data[i][j] = sum([self.data[i][k] * other.data[k][j] for k in range(common_len)])
@@ -134,10 +135,21 @@ class Matrix:
         return Matrix.__truediv__(self, other)
 
     def __str__(self) -> str:
-        return "Matrix(%s)" %(self.data)
+        return repr(self)
+
     def __repr__(self) -> str:
-        return "Matrix(%s)" %(self.data)
+        return f"{self.constructor.__name__}({self.data})"
 
 
 class Vector(Matrix):
-    ...
+
+    def __init__(self, param: List or Tuple[float, float]) -> None:
+        """ Initialize the Vector
+        Args:
+            param (List or Tuple):
+                - List => elements of the vector
+                - Tuple => shape of the vector, filled with zeros
+        """
+        super().__init__(param)
+        if self.shape[0] != 1 and self.shape[1] != 1:
+            raise ValueError('Vector has incorrect shape')
