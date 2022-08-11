@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/07 18:36:21 by mli               #+#    #+#              #
-#    Updated: 2022/08/11 12:01:41 by mli              ###   ########.fr        #
+#    Updated: 2022/08/11 12:33:26 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -130,7 +130,8 @@ class Matrix:
                     res.data[i][j] = self.data[i][j] * other
         elif isinstance(other, Matrix) and self.shape[1] == other.shape[0]:
             common_len = self.shape[1]
-            res = Matrix((self.shape[0], other.shape[1]))
+            constructor = Vector if (self.shape[0] == 1 or other.shape[1] == 1) else Matrix
+            res = constructor((self.shape[0], other.shape[1]))
             for i in range(res.shape[0]):
                 for j in range(res.shape[1]):
                     res.data[i][j] = sum([self.data[i][k] * other.data[k][j] for k in range(common_len)])
