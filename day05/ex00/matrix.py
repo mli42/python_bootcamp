@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/07 18:36:21 by mli               #+#    #+#              #
-#    Updated: 2022/08/06 19:24:12 by mli              ###   ########.fr        #
+#    Updated: 2022/08/11 12:01:41 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -79,9 +79,9 @@ class Matrix:
 
 
     def __add__(self, other):
-        # add : vectors and matrices, can have errors with vectors and matrices.
-        if isinstance(other, Matrix) and self.shape != other.shape:
-            return
+        # add : only matrices of same dimensions
+        if not isinstance(other, Matrix) or self.shape != other.shape:
+            raise ValueError('Parameter must be matrix of same shape')
         res = self.constructor(self.shape)
         for i in range(res.shape[0]):
             for j in range(res.shape[1]):
@@ -89,23 +89,34 @@ class Matrix:
         return res
 
     def __sub__(self, other):
-        # sub : vectors and matrices, can have errors with vectors and matrices.
-        if isinstance(other, Matrix) and self.shape != other.shape:
-            return
+        # sub : only matrices of same dimensions
+        if not isinstance(other, Matrix) or self.shape != other.shape:
+            raise ValueError('Parameter must be matrix of same shape')
         res = self.constructor(self.shape)
         for i in range(res.shape[0]):
             for j in range(res.shape[1]):
                 res.data[i][j] = self.data[i][j] - other.data[i][j]
         return res
 
-    def __truediv__(self, other):
+    def __truediv__(self, other: int or float):
         # div : only scalars.
         if not isinstance(other, (int, float)):
-            return
+            raise ValueError('Parameter must a scalar')
         res = self.constructor(self.shape)
         for i in range(res.shape[0]):
             for j in range(res.shape[1]):
                 res.data[i][j] = self.data[i][j] / other
+        return res
+
+
+    def __rtruediv__(self, other: int or float):
+        # div : only scalars.
+        if not isinstance(other, (int, float)):
+            raise ValueError('Parameter must a scalar')
+        res = self.constructor(self.shape)
+        for i in range(res.shape[0]):
+            for j in range(res.shape[1]):
+                res.data[i][j] = other / self.data[i][j]
         return res
 
     def __mul__(self, other):
@@ -117,12 +128,14 @@ class Matrix:
             for i in range(res.shape[0]):
                 for j in range(res.shape[1]):
                     res.data[i][j] = self.data[i][j] * other
-        elif isinstance(other, Matrix):
+        elif isinstance(other, Matrix) and self.shape[1] == other.shape[0]:
             common_len = self.shape[1]
-            res = self.constructor((self.shape[0], other.shape[1]))
+            res = Matrix((self.shape[0], other.shape[1]))
             for i in range(res.shape[0]):
                 for j in range(res.shape[1]):
                     res.data[i][j] = sum([self.data[i][k] * other.data[k][j] for k in range(common_len)])
+        else:
+            raise ValueError('Parameter must a scalar or a Matrix with correct shape')
         return res
 
     def __radd__(self, other):
@@ -131,8 +144,6 @@ class Matrix:
         return Matrix.__sub__(self, other)
     def __rmul__(self, other):
         return Matrix.__mul__(self, other)
-    def __rtruediv__(self, other):
-        return Matrix.__truediv__(self, other)
 
     def __str__(self) -> str:
         return repr(self)

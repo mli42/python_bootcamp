@@ -46,7 +46,7 @@ class MyTestCase(unittest.TestCase):
                     [0.0, 2.0, 4.0]])
         v1 = Vector([[1], [2], [3]])
 
-        self.assertIn(repr(m1 * v1), ("Matrix([[8.0], [16.0]])", "Vector([[8.0], [16.0]"))
+        self.assertIn(repr(m1 * v1), ("Matrix([[8.0], [16.0]])", "Vector([[8.0], [16.0]])"))
 
 
     def test_subject_4(self):
