@@ -6,12 +6,11 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/14 16:11:04 by mli               #+#    #+#              #
-#    Updated: 2022/08/13 15:05:14 by mli              ###   ########.fr        #
+#    Updated: 2022/08/13 16:21:11 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 import numpy as np
-from prediction import simple_predict as predict
 
 
 def loss_elem_(y: np.ndarray, y_hat: np.ndarray) -> np.ndarray:
@@ -31,7 +30,10 @@ def loss_elem_(y: np.ndarray, y_hat: np.ndarray) -> np.ndarray:
         return None
     if y.shape not in [(y.size,), (y.size, 1)] or y.shape != y_hat.shape:
         return None
-    res = (y_hat - y) ** 2
+    res = np.array([])
+    for i_hat, i in zip(y_hat, y):
+        res = np.append(res, (i_hat - i) ** 2)
+    res = res.reshape(-1, 1)
     return res
 
 

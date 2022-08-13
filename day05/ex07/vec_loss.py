@@ -1,18 +1,18 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    vec_cost.py                                        :+:      :+:    :+:    #
+#    vec_loss.py                                        :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/14 16:11:04 by mli               #+#    #+#              #
-#    Updated: 2020/12/15 23:20:54 by mli              ###   ########.fr        #
+#    Updated: 2022/08/13 16:07:12 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 import numpy as np
 
-def cost_(y: np.ndarray, y_hat: np.ndarray) -> float:
+def loss_(y: np.ndarray, y_hat: np.ndarray) -> float:
     """Computes the half mean squared error of two non-empty numpy.ndarray,
         without any for loop. The two arrays must have the same dimensions.
     Args:
@@ -25,21 +25,10 @@ def cost_(y: np.ndarray, y_hat: np.ndarray) -> float:
     Raises:
       This function should not raise any Exceptions.
     """
-    if y.shape != y_hat.shape:
+    if not all([isinstance(obj, np.ndarray) for obj in [y, y_hat]]) or y.size == 0:
         return None
-    j_elem = (y_hat - y) ** 2 / (2 * y.shape[0])
+    if y.shape not in [(y.size,), (y.size, 1)] or y.shape != y_hat.shape:
+        return None
+    x = (y_hat - y)
+    j_elem = x.dot(x) / (2 * y.shape[0])
     return np.sum(j_elem)
-
-if __name__ == "__main__":
-    X = np.array([0, 15, -9, 7, 12, 3, -21]).reshape(7, 1)
-    Y = np.array([2, 14, -13, 5, 12, 4, -19]).reshape(7, 1)
-
-    flag = 3
-    if flag & 1:
-        # Example 1:
-        print(cost_(X, Y))
-        # Output: 2.142857142857143
-    if flag & 2:
-        # Example 2:
-        print(cost_(X, X))
-        # Output: 0.0
