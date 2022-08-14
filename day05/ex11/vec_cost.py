@@ -1,1 +1,0 @@
-../ex08/vec_cost.py
