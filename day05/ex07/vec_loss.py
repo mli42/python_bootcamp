@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/14 16:11:04 by mli               #+#    #+#              #
-#    Updated: 2022/08/13 16:07:12 by mli              ###   ########.fr        #
+#    Updated: 2022/08/14 13:58:14 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,6 +29,5 @@ def loss_(y: np.ndarray, y_hat: np.ndarray) -> float:
         return None
     if y.shape not in [(y.size,), (y.size, 1)] or y.shape != y_hat.shape:
         return None
-    x = (y_hat - y)
-    j_elem = x.dot(x) / (2 * y.shape[0])
+    j_elem = (y_hat - y) ** 2 / (2 * y.shape[0])
     return np.sum(j_elem)
