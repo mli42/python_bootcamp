@@ -6,12 +6,42 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/16 22:28:08 by mli               #+#    #+#              #
-#    Updated: 2020/12/16 22:47:42 by mli              ###   ########.fr        #
+#    Updated: 2022/08/15 17:44:10 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 import numpy as np
-from prediction import predict_
+
+
+def add_intercept(x: np.ndarray) -> np.ndarray:
+    """Adds a column of 1's to the non-empty numpy.ndarray x.
+    Args:
+      x: has to be an numpy.ndarray, a vector of dimension m * 1.
+    Returns:
+      X as a numpy.ndarray, a vector of dimension m * 2.
+      None if x is not a numpy.ndarray.
+      None if x is a empty numpy.ndarray.
+    Raises:
+      This function should not raise any Exception.
+    """
+    if not isinstance(x, np.ndarray) or x.size == 0:
+        return None
+    if len(x.shape) == 1:
+        x = x.reshape(-1, 1)
+    ones = np.ones((x.shape[0], 1))
+    res = np.concatenate((ones, x), axis=1)
+    return res
+
+
+def predict_(x: np.ndarray, theta: np.ndarray) -> np.ndarray:
+    if not all([isinstance(obj, np.ndarray) for obj in [x, theta]]) or x.size == 0:
+        return None
+    if theta.shape not in [(2,), (2, 1)] or x.shape not in [(x.size,), (x.size, 1)]:
+        return None
+    x = add_intercept(x)
+    y_hat = x.dot(theta)
+    return y_hat
+
 
 def simple_gradient(x: np.ndarray, y: np.ndarray, theta: np.ndarray) -> np.ndarray:
     """Computes a gradient vector from three non-empty numpy.ndarray.
@@ -27,30 +57,24 @@ def simple_gradient(x: np.ndarray, y: np.ndarray, theta: np.ndarray) -> np.ndarr
     Raises:
       This function should not raise any Exception.
     """
-    if (0 in [len(x), len(y), len(theta)] or x.shape != y.shape or
-            (x.shape[1] + 1) != theta.shape[0]):
+    if (
+        not all([isinstance(obj, np.ndarray) for obj in [x, y, theta]])
+        or not all([obj.shape in [(obj.size,), (obj.size, 1)] for obj in [x, y, theta]])
+        or theta.size != 2
+        or x.size != y.size
+    ):
         return None
-    res = np.zeros(shape=(theta.shape))
+    # Reshape parameters
+    params = [x, y, theta]
+    for i, elem in enumerate(params):
+        params[i] = elem.reshape(-1, 1)
+
+    # Gradient algorithm
     m = x.shape[0]
+    res = np.zeros(theta.shape)
     y_hat = predict_(x, theta)
     for i in range(m):
         res[0][0] += (y_hat[i][0] - y[i][0])
         res[1][0] += (y_hat[i][0] - y[i][0]) * (x[i][0])
     res = res / m
     return res
-
-if __name__ == "__main__":
-    x = np.array([12.4956442, 21.5007972, 31.5527382, 48.9145838, 57.5088733])
-    x = x.reshape(len(x), 1)
-    y = np.array([37.4013816, 36.1473236, 45.7655287, 46.6793434, 59.5585554])
-    y = y.reshape(len(y), 1)
-
-    # Example 0:
-    theta1 = np.array([2, 0.7]).reshape(2, 1)
-    print(simple_gradient(x, y, theta1))
-    # Output: array([21.0342574, 587.36875564])
-
-    # Example 1:
-    theta2 = np.array([1, -0.4]).reshape(2, 1)
-    print(simple_gradient(x, y, theta2))
-    # Output: array([58.86823748, 2229.72297889])
