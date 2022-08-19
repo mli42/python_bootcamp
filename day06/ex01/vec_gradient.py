@@ -1,12 +1,12 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    gradient.py                                        :+:      :+:    :+:    #
+#    vec_gradient.py                                    :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2020/12/16 22:28:08 by mli               #+#    #+#              #
-#    Updated: 2022/08/19 14:30:20 by mli              ###   ########.fr        #
+#    Created: 2020/12/19 18:35:43 by mli               #+#    #+#              #
+#    Updated: 2022/08/19 14:30:50 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,18 +44,18 @@ def predict_(x: np.ndarray, theta: np.ndarray) -> np.ndarray:
 
 
 def simple_gradient(x: np.ndarray, y: np.ndarray, theta: np.ndarray) -> np.ndarray:
-    """Computes a gradient vector from three non-empty numpy.ndarray.
+    """Computes a gradient vector from three non-empty numpy.ndarray, without any for loop.
         The three arrays must have compatible dimensions.
     Args:
-      x: has to be an numpy.ndarray, a vector of dimension m * 1.
-      y: has to be an numpy.ndarray, a vector of dimension m * 1.
-      theta: has to be an numpy.ndarray, a 2 * 1 vector.
+        x: has to be a numpy.ndarray, a matrix of dimension m * 1.
+        y: has to be a numpy.ndarray, a vector of dimension m * 1.
+        theta: has to be a numpy.ndarray, a 2 * 1 vector.
     Returns:
-      The gradient as a numpy.ndarray, a vector of dimension 2 * 1.
-      None if x, y, or theta are empty numpy.ndarray.
-      None if x, y and theta do not have compatible dimensions.
+        The gradient as a numpy.ndarray, a vector of dimension 2 * 1.
+        None if x, y, or theta is an empty numpy.ndarray.
+        None if x, y and theta do not have compatible dimensions.
     Raises:
-      This function should not raise any Exception.
+        This function should not raise any Exception.
     """
     if (
         not all([isinstance(obj, np.ndarray) and obj.dtype.kind in 'iuf' for obj in [x, y, theta]])
@@ -71,10 +71,6 @@ def simple_gradient(x: np.ndarray, y: np.ndarray, theta: np.ndarray) -> np.ndarr
 
     # Gradient algorithm
     m = x.shape[0]
-    res = np.zeros(theta.shape)
-    y_hat = predict_(x, theta)
-    for i in range(m):
-        res[0][0] += (y_hat[i][0] - y[i][0])
-        res[1][0] += (y_hat[i][0] - y[i][0]) * (x[i][0])
-    res = res / m
-    return res
+    x = add_intercept(x)
+    nabla_j = x.T.dot(x.dot(theta) - y) / m
+    return nabla_j
