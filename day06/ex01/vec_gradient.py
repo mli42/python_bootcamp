@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/19 18:35:43 by mli               #+#    #+#              #
-#    Updated: 2022/08/19 14:30:50 by mli              ###   ########.fr        #
+#    Updated: 2022/08/21 21:58:30 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,8 +58,11 @@ def simple_gradient(x: np.ndarray, y: np.ndarray, theta: np.ndarray) -> np.ndarr
         This function should not raise any Exception.
     """
     if (
-        not all([isinstance(obj, np.ndarray) and obj.dtype.kind in 'iuf' for obj in [x, y, theta]])
-        or not all([obj.shape in [(obj.size,), (obj.size, 1)] for obj in [x, y, theta]])
+        not all([
+            isinstance(obj, np.ndarray)
+            and obj.dtype.kind in 'iuf'
+            and obj.shape in [(obj.size,), (obj.size, 1)]
+            for obj in (x, y, theta)])
         or theta.size != 2
         or x.size != y.size
     ):

@@ -6,13 +6,12 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/19 18:35:43 by mli               #+#    #+#              #
-#    Updated: 2020/12/19 20:49:41 by mli              ###   ########.fr        #
+#    Updated: 2022/08/21 22:07:59 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 import numpy as np
-from gradient import gradient
-from prediction import predict_
+from vec_gradient import simple_gradient as gradient
 
 def fit_(x: np.ndarray, y: np.ndarray, theta: np.ndarray,
          alpha: float, max_iter: int) -> np.ndarray:
@@ -31,40 +30,28 @@ def fit_(x: np.ndarray, y: np.ndarray, theta: np.ndarray,
     Raises:
         This function should not raise any Exception.
     """
-    if x.shape != y.shape or theta.shape != (2, 1):
+    if (
+        not all([
+            isinstance(obj, np.ndarray)
+            and obj.dtype.kind in 'iuf'
+            and obj.shape in [(obj.size,), (obj.size, 1)]
+            for obj in (x, y, theta)])
+        or not isinstance(alpha, (int, float))
+        or not isinstance(max_iter, int)
+        or theta.size != 2
+        or x.size != y.size
+    ):
         return None
+
+    # Reshape parameters
+    params = [x, y, theta]
+    for i, elem in enumerate(params):
+        if len(elem.shape) != 2:
+            params[i] = elem.reshape(-1, 1)
+
+    # Linear Gradient Descent
     theta = theta.astype("float64")
-    while max_iter > 0:
-        new_theta = gradient(x, y, theta)
-        theta[0][0] -= alpha * new_theta[0][0]
-        theta[1][0] -= alpha * new_theta[1][0]
-        max_iter -= 1
+    for _ in range(max_iter):
+        nabla = gradient(x, y, theta)
+        theta -= alpha * nabla
     return theta
-
-if __name__ == "__main__":
-    x = np.array([[12.4956442], [21.5007972], [31.5527382], [48.9145838], [57.5088733]])
-    y = np.array([[37.4013816], [36.1473236], [45.7655287], [46.6793434], [59.5585554]])
-    theta= np.array([1, 1])
-
-    x = x.reshape(len(x), 1)
-    y = y.reshape(len(y), 1)
-    theta = theta.reshape(len(theta), 1)
-
-    # Example 0:
-    theta1 = fit_(x, y, theta, alpha=5e-8, max_iter=1500000)
-    print(theta1)
-    # Output:
-    """
-    array([[1.40709365],
-           [1.1150909]])
-    """
-    # Example 1:
-    print(predict_(x, theta1))
-    # Output:
-    """
-    array([[15.3408728],
-           [25.38243697],
-           [36.59126492],
-           [55.95130097],
-           [65.53471499]])
-    """
