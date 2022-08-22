@@ -1,87 +1,90 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    test.py                                            :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2020/12/19 20:59:43 by mli               #+#    #+#              #
-#    Updated: 2022/08/22 00:53:02 by mli              ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
-import numpy as np
 from my_linear_regression import MyLinearRegression as MyLR
+import numpy as np
+import unittest
 
-if __name__ == "__main__":
-    x = np.array([[12.4956442], [21.5007972], [31.5527382], [48.9145838], [57.5088733]])
-    y = np.array([[37.4013816], [36.1473236], [45.7655287], [46.6793434], [59.5585554]])
-    lr1 = MyLR(np.array([[2], [0.7]]))
 
-    # Example 0.0:
-    print(lr1.predict_(x))
-    # Output:
-    """
-    array([[10.74695094],
-           [17.05055804],
-           [24.08691674],
-           [36.24020866],
-           [42.25621131]])
-    """
+def assertEqual(x: np.ndarray, y: np.ndarray):
+    np.testing.assert_array_almost_equal(x, y)
 
-    # Example 0.1:
-    print(lr1.loss_elem_(lr1.predict_(x), y))
-    # Output:
-    """
-    array([[77.72116511],
-           [49.33699664],
-           [72.38621816],
-           [37.29223426],
-           [78.28360514]])
-    """
 
-    # Example 0.2:
-    print(lr1.loss_(lr1.predict_(x), y))
-    # Output:
-    """
-    315.0202193084312
-    """
+class MyTestCase(unittest.TestCase):
 
-    # Example 1.0:
-    lr2 = MyLR(np.array([[1], [1]]), 5e-8, 1500000)
-    lr2.fit_(x, y)
-    print(lr2.thetas)
-    # Output:
-    """
-    array([[1.40709365],
-           [1.1150909]])
-    """
+    def test_subject_1(self):
+        x = np.array([[12.4956442], [21.5007972], [31.5527382], [48.9145838], [57.5088733]])
+        y = np.array([[37.4013816], [36.1473236], [45.7655287], [46.6793434], [59.5585554]])
 
-    # Example 1.1:
-    print(lr2.predict_(x))
-    # Output:
-    """
-    array([[15.3408728],
-           [25.38243697],
-           [36.59126492],
-           [55.95130097],
-           [65.53471499]])
-    """
+        lr1 = MyLR(np.array([[2], [0.7]]))
 
-    # Example 1.2:
-    print(lr2.loss_elem_(lr2.predict_(x), y))
-    # Output:
-    """
-    array([[35.6749755],
-           [4.14286023],
-           [1.26440585],
-           [29.30443042],
-           [22.27765992]])
-    """
+        # Example 0.0:
+        y_hat = lr1.predict_(x)
 
-    # Example 1.3:
-    print(lr2.loss_(lr2.predict_(x), y))
-    # Output:
-    """
-    92.66433192085971
-    """
+        assertEqual(
+            y_hat,
+            np.array([
+                [10.74695094],
+                [17.05055804],
+                [24.08691674],
+                [36.24020866],
+                [42.25621131]])
+        )
+
+        # Example 0.1:
+        assertEqual(
+            lr1.loss_elem_(y, y_hat),
+            np.array([
+                [71.04586738],
+                [36.46864549],
+                [46.99622165],
+                [10.89755341],
+                [29.9371111 ]])
+        )
+
+        # Example 0.2:
+        self.assertAlmostEqual(lr1.loss_(y, y_hat), 195.34539903032385)
+
+    def test_subject_2(self):
+        x = np.array([[12.4956442], [21.5007972], [31.5527382], [48.9145838], [57.5088733]])
+        y = np.array([[37.4013816], [36.1473236], [45.7655287], [46.6793434], [59.5585554]])
+
+        lr2 = MyLR(np.array([[1], [1]]), 5e-8, 1500000)
+
+        # Example 1.0:
+        lr2.fit_(x, y)
+
+        assertEqual(
+            lr2.thetas,
+            np.array([
+                [1.40709365],
+                [1.1150909 ]])
+        )
+
+        # Example 1.1:
+        y_hat = lr2.predict_(x)
+
+        assertEqual(
+            y_hat,
+            np.array([
+                [15.3408728 ],
+                [25.38243697],
+                [36.59126492],
+                [55.95130097],
+                [65.53471499]])
+        )
+
+        # Example 1.2:
+        assertEqual(
+            lr2.loss_elem_(y, y_hat),
+            np.array([
+                [48.66660486],
+                [11.58827842],
+                [ 8.4167116 ],
+                [ 8.59691972],
+                [ 3.57144835]])
+        )
+
+        # Example 1.3:
+        self.assertAlmostEqual(lr2.loss_(y, y_hat), 80.83996294128525)
+
+
+if __name__ == '__main__':
+    unittest.main()
