@@ -1,1 +1,0 @@
-../ex06/my_linear_regression.py

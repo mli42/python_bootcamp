@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/19 20:59:43 by mli               #+#    #+#              #
-#    Updated: 2022/08/22 00:53:24 by mli              ###   ########.fr        #
+#    Updated: 2022/08/24 13:51:51 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -71,6 +71,28 @@ class MyLinearRegression():
         if j_elem is None:
             return None
         return np.sum(j_elem)
+
+
+    def mse_(self, y: np.ndarray, y_hat: np.ndarray) -> float:
+        """ Computes the MSE of two non-empty numpy.ndarray.
+            The two arrays must have the same dimensions.
+        Args:
+            y: has to be an numpy.ndarray, a vector.
+            y_hat: has to be an numpy.ndarray, a vector.
+        Returns:
+            The half mean squared error of the two vectors as a float.
+            None if y or y_hat are empty numpy.ndarray.
+            None if y and y_hat does not share the same dimensions.
+        Raises:
+            This function should not raise any Exceptions.
+        """
+        if (
+            not self.__check_arrays((y, y_hat))
+            or y.shape != y_hat.shape
+        ):
+            return None
+        j_elem = (y_hat - y) ** 2
+        return np.sum(j_elem) / y.shape[0]
 
 
     @staticmethod
