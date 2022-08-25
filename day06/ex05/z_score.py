@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/21 18:30:08 by mli               #+#    #+#              #
-#    Updated: 2022/08/25 13:15:32 by mli              ###   ########.fr        #
+#    Updated: 2022/08/25 13:33:25 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,4 +33,4 @@ def zscore(x: np.ndarray) -> np.ndarray:
     mean = np.sum(x) / x.size
     std = (sum([(x_elem - mean) ** 2 for x_elem in x]) / x.size) ** .5
     res = (x - mean) / std
-    return res
+    return res.reshape((-1,))
