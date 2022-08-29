@@ -6,13 +6,24 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/22 15:37:28 by mli               #+#    #+#              #
-#    Updated: 2020/12/22 15:55:30 by mli              ###   ########.fr        #
+#    Updated: 2022/08/29 16:22:33 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 import numpy as np
+from typing import Tuple
 
-def add_intercept(x: np.ndarray, axis: int = 1) -> np.ndarray:
+
+def __check_arrays(arrays: Tuple[np.ndarray]) -> bool:
+    return all([
+        isinstance(obj, np.ndarray)
+        and obj.dtype.kind in 'iuf'
+        and len(obj.shape) == 2
+        and obj.size != 0
+        for obj in arrays])
+
+
+def add_intercept(x: np.ndarray) -> np.ndarray:
     """Adds a column of 1's to the non-empty numpy.ndarray x.
     Args:
         x: has to be an numpy.ndarray, a matrix of dimension m * n.
@@ -23,11 +34,12 @@ def add_intercept(x: np.ndarray, axis: int = 1) -> np.ndarray:
     Raises:
         This function should not raise any Exception.
     """
-    if not isinstance(x, np.ndarray) or x.size == 0:
+    if __check_arrays((x, )) is False:
         return None
     ones = np.ones((x.shape[0], 1))
-    res = np.concatenate((ones, x), axis=axis)
+    res = np.concatenate((ones, x), axis=1)
     return res
+
 
 def predict_(x: np.ndarray, theta: np.ndarray) -> np.ndarray:
     """Computes the prediction vector y_hat from two non-empty numpy.ndarray.
@@ -41,32 +53,12 @@ def predict_(x: np.ndarray, theta: np.ndarray) -> np.ndarray:
     Raises:
       This function should not raise any Exception.
     """
-    if (x.shape[1] + 1) != theta.shape[0]:
+    if (
+        __check_arrays((x, theta)) is False
+        or theta.size != theta.shape[0]
+        or x.shape[1] + 1 != theta.size
+    ):
         return None
-    intercepted = add_intercept(x)
-    y_hat = intercepted.dot(theta)
+    x = add_intercept(x)
+    y_hat = x.dot(theta)
     return y_hat
-
-if __name__ == "__main__":
-    x = np.arange(1, 13).reshape((4, -1))
-
-    # Example 1:
-    theta1 = np.array([5, 0, 0, 0]).reshape(-1, 1)
-    print(predict_(x, theta1))
-    # Ouput: array([5., 5., 5., 5.])
-
-    # Example 2:
-    theta2 = np.array([0, 1, 0, 0]).reshape(-1, 1)
-    print(predict_(x, theta2))
-    # Output: array([ 1.,  4.,  7., 10.])
-
-    # Example 3:
-    theta3 = np.array([-1.5, 0.6, 2.3, 1.98]).reshape(-1, 1)
-    print(predict_(x, theta3))
-    # Output: array([ 9.64, 24.28, 38.92, 53.56])
-
-
-    # Example 4:
-    theta4 = np.array([-3, 1, 2, 3.5]).reshape(-1, 1)
-    print(predict_(x, theta4))
-    # Output: array([12.5, 32. , 51.5, 71. ])
