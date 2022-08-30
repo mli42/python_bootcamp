@@ -6,13 +6,24 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/19 18:35:43 by mli               #+#    #+#              #
-#    Updated: 2020/12/22 16:53:10 by mli              ###   ########.fr        #
+#    Updated: 2022/08/30 15:55:45 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 import numpy as np
-from gradient import gradient_
+from typing import Tuple
+from gradient import gradient as gradient_
 from prediction import predict_
+
+
+def __check_arrays(arrays: Tuple[np.ndarray]) -> bool:
+    return all([
+        isinstance(obj, np.ndarray)
+        and obj.dtype.kind in 'iuf'
+        and len(obj.shape) == 2
+        and obj.size != 0
+        for obj in arrays])
+
 
 def fit_(x: np.ndarray, y: np.ndarray, theta: np.ndarray,
          alpha: float, max_iter: int) -> np.ndarray:
@@ -31,23 +42,18 @@ def fit_(x: np.ndarray, y: np.ndarray, theta: np.ndarray,
     Raises:
         This function should not raise any Exception.
     """
-    if x.shape[0] != y.shape[0] or (x.shape[1] + 1) != theta.shape[0]:
+    if (
+        not __check_arrays((x, y, theta))
+        or not isinstance(alpha, (int, float))
+        or not isinstance(max_iter, int)
+        or x.shape[0] != y.shape[0]
+        or y.shape[1] != 1
+        or theta.shape[1] != 1
+        or x.shape[1] + 1 != theta.size
+    ):
         return None
+    theta = theta.astype("float64")
     for _ in range(max_iter):
-        new_theta = gradient_(x, y, theta)
-        theta -= alpha * new_theta
+        nabla = gradient_(x, y, theta)
+        theta -= alpha * nabla
     return theta
-
-if __name__ == "__main__":
-    x = np.array([[0.2, 2., 20.], [0.4, 4., 40.], [0.6, 6., 60.], [0.8, 8., 80.]])
-    y = np.array([[19.6], [-2.8], [-25.2], [-47.6]])
-    theta = np.array([[42.], [1.], [1.], [1.]])
-
-    # Example 0:
-    theta2 = fit_(x, y, theta,  alpha = 0.0005, max_iter=42000)
-    print(theta2)
-    # Output: array([[41.99..],[0.97..], [0.77..], [-1.20..]])
-
-    # Example 1:
-    print(predict_(x, theta2))
-    # Output: array([[19.5992..], [-2.8003..], [-25.1999..], [-47.5996..]])
