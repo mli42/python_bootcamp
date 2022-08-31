@@ -6,11 +6,12 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/19 20:59:43 by mli               #+#    #+#              #
-#    Updated: 2021/01/02 18:22:02 by mli              ###   ########.fr        #
+#    Updated: 2022/08/31 15:23:27 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 import numpy as np
+from typing import Tuple
 
 class MyLinearRegression():
     """
@@ -18,44 +19,43 @@ class MyLinearRegression():
         My personnal linear regression class to fit like a boss.
     """
 
+    def __check_arrays(self, arrays: Tuple[np.ndarray]) -> bool:
+        return all([
+            isinstance(obj, np.ndarray)
+            and obj.dtype.kind in 'iuf'
+            and len(obj.shape) == 2
+            and obj.size != 0
+            for obj in arrays])
+
+
     def __init__(self, thetas: np.ndarray, alpha: float = 0.001, max_iter: int = 1000):
-        if isinstance(thetas, list):
-            thetas = np.asarray(thetas).reshape(-1, 1)
-        thetas = thetas.astype("float64")
+        if (
+            not self.__check_arrays((thetas,))
+            or not isinstance(alpha, (int, float))
+            or not isinstance(max_iter, int)
+            or thetas.shape[1] != 1
+        ):
+            raise ValueError('Wrong argument')
+
+        thetas = thetas.reshape(-1, 1).astype("float64")
         self.alpha = alpha
         self.max_iter = max_iter
         self.thetas = thetas
 
-    @staticmethod
-    def mse_(y: np.ndarray, y_hat: np.ndarray) -> float:
-        if y.shape != y_hat.shape:
-            return None
-        mse_elem = (y_hat - y) ** 2 / (y.shape[0])
-        return np.sum(mse_elem)
 
-    @staticmethod
-    def cost_elem_(y: np.ndarray, y_hat: np.ndarray) -> np.ndarray:
-        """
-        Description:
-            Calculates all the elements (1/2*M)*(y_pred - y)^2 of the cost function.
-        Args:
-            y: has to be an numpy.ndarray, a vector.
-            y_hat: has to be an numpy.ndarray, a vector.
-        Returns:
-            J_elem: numpy.ndarray, a vector of dimension (number of the training examples,1).
-            None if there is a dimension matching problem between X, Y or theta.
-        Raises:
-            This function should not raise any Exception.
-        """
-        if y.shape != y_hat.shape:
+    def loss_elem_(self, y: np.ndarray, y_hat: np.ndarray) -> float:
+        if (
+            not self.__check_arrays((y, y_hat))
+            or y.shape != y_hat.shape
+        ):
             return None
-        res = (y_hat - y) ** 2 / (2 * y.shape[0])
-        return res
+        j_elem = (y_hat - y) ** 2
+        return j_elem
 
-    @staticmethod
-    def cost_(y: np.ndarray, y_hat: np.ndarray) -> float:
+
+    def loss_(self, y: np.ndarray, y_hat: np.ndarray) -> float:
         """Computes the half mean squared error of two non-empty numpy.ndarray,
-            without any for loop. The two arrays must have the same dimensions.
+        without any for loop. The two arrays must have the same dimensions.
         Args:
             y: has to be an numpy.ndarray, a vector.
             y_hat: has to be an numpy.ndarray, a vector.
@@ -66,13 +66,35 @@ class MyLinearRegression():
         Raises:
             This function should not raise any Exceptions.
         """
-        if y.shape != y_hat.shape:
+        j_elem = self.loss_elem_(y, y_hat)
+        if j_elem is None:
             return None
-        j_elem = MyLinearRegression.cost_elem_(y, y_hat)
-        return np.sum(j_elem)
+        return np.sum(j_elem) / (2 * y.shape[0])
 
-    @staticmethod
-    def add_intercept(x: np.ndarray, axis: int = 1) -> np.ndarray:
+
+    def mse_(self, y: np.ndarray, y_hat: np.ndarray) -> float:
+        """ Computes the MSE of two non-empty numpy.ndarray.
+            The two arrays must have the same dimensions.
+        Args:
+            y: has to be an numpy.ndarray, a vector.
+            y_hat: has to be an numpy.ndarray, a vector.
+        Returns:
+            The half mean squared error of the two vectors as a float.
+            None if y or y_hat are empty numpy.ndarray.
+            None if y and y_hat does not share the same dimensions.
+        Raises:
+            This function should not raise any Exceptions.
+        """
+        if (
+            not self.__check_arrays((y, y_hat))
+            or y.shape != y_hat.shape
+        ):
+            return None
+        j_elem = (y_hat - y) ** 2
+        return np.sum(j_elem) / y.shape[0]
+
+
+    def add_intercept(self, x: np.ndarray) -> np.ndarray:
         """Adds a column of 1's to the non-empty numpy.ndarray x.
         Args:
             x: has to be an numpy.ndarray, a matrix of dimension m * n.
@@ -83,11 +105,12 @@ class MyLinearRegression():
         Raises:
             This function should not raise any Exception.
         """
-        if not isinstance(x, np.ndarray) or x.size == 0:
+        if not self.__check_arrays((x,)):
             return None
         ones = np.ones((x.shape[0], 1))
-        res = np.concatenate((ones, x), axis=axis)
+        res = np.concatenate((ones, x), axis=1)
         return res
+
 
     def predict_(self, x: np.ndarray) -> np.ndarray:
         """Computes the prediction vector y_hat from two non-empty numpy.ndarray.
@@ -101,12 +124,15 @@ class MyLinearRegression():
         Raises:
             This function should not raise any Exception.
         """
-        theta = self.thetas
-        if (x.shape[1] + 1) != theta.shape[0]:
+        if (
+            not self.__check_arrays((x, self.thetas))
+            or x.shape[1] + 1 != self.thetas.shape[0]
+        ):
             return None
-        intercepted = self.add_intercept(x)
-        y_hat = intercepted.dot(theta)
+        x = self.add_intercept(x)
+        y_hat = x.dot(self.thetas)
         return y_hat
+
 
     def gradient_(self, x: np.ndarray, y: np.ndarray) -> np.ndarray:
         """Computes a gradient vector from three non-empty numpy.ndarray,
@@ -123,15 +149,19 @@ class MyLinearRegression():
         Raises:
             This function should not raise any Exception.
         """
-        theta = self.thetas
-        if (0 in [x.size, y.size, theta.size] or x.shape[0] != y.shape[0] or
-            (x.shape[1] + 1) != theta.shape[0]):
+        if (
+            not self.__check_arrays((x, y, self.thetas))
+            or x.shape[0] != y.shape[0]
+            or y.shape[1] != 1
+            or self.thetas.shape[1] != 1
+            or x.shape[1] + 1 != self.thetas.size
+        ):
             return None
         m = x.shape[0]
-        y_hat = self.predict_(x)
         x = self.add_intercept(x)
-        nabla_j = x.T.dot(y_hat - y) / m
+        nabla_j = x.T.dot(x.dot(self.thetas) - y) / m
         return nabla_j
+
 
     def fit_(self, x: np.ndarray, y: np.ndarray) -> None:
         """
@@ -149,11 +179,14 @@ class MyLinearRegression():
         Raises:
             This function should not raise any Exception.
         """
-        theta = self.thetas
-        alpha = self.alpha
-        if x.shape[0] != y.shape[0] or (x.shape[1] + 1) != theta.shape[0]:
+        if (
+            not self.__check_arrays((x, y, self.thetas))
+            or x.shape[0] != y.shape[0]
+            or y.shape[1] != 1
+            or self.thetas.shape[1] != 1
+            or x.shape[1] + 1 != self.thetas.size
+        ):
             return None
         for _ in range(self.max_iter):
-            new_theta = self.gradient_(x, y)
-            theta -= alpha * new_theta
-        self.thetas = theta
+            nabla = self.gradient_(x, y)
+            self.thetas -= self.alpha * nabla
