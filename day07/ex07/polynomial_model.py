@@ -6,7 +6,7 @@
 #    By: mli <mli@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/22 22:47:23 by mli               #+#    #+#              #
-#    Updated: 2020/12/22 23:07:35 by mli              ###   ########.fr        #
+#    Updated: 2022/09/12 16:01:17 by mli              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,33 +24,16 @@ def add_polynomial_features(x: np.ndarray, power: int) -> np.ndarray:
     Raises:
         This function should not raise any Exception.
     """
+    if not (
+        isinstance(x, np.ndarray)
+        and x.dtype.kind in 'iuf'
+        and x.shape == (x.size, 1)
+        and isinstance(power, int)
+        and power >= 1
+    ):
+        return None
     res = x
     for i in range(2, power + 1):
         raised = x ** i
         res = np.concatenate((res, raised), axis=1)
     return res
-
-if __name__ == "__main__":
-    x = np.arange(1,6).reshape(-1, 1)
-
-    # Example 1:
-    print(add_polynomial_features(x, 3))
-    # Output:
-    """
-    array([[1,   1,   1],
-           [2,   4,   8],
-           [3,   9,  27],
-           [4,  16,  64],
-           [5,  25, 125]])
-    """
-
-    # Example 2:
-    print(add_polynomial_features(x, 6))
-    # Output:
-    """
-    array([[    1,     1,     1,     1,     1,     1],
-           [    2,     4,     8,    16,    32,    64],
-           [    3,     9,    27,    81,   243,   729],
-           [    4,    16,    64,   256,  1024,  4096],
-           [    5,    25,   125,   625,  3125, 15625]])
-    """
