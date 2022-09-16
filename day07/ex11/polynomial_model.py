@@ -1,1 +1,0 @@
-../ex10/polynomial_model.py
