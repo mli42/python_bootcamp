@@ -1,0 +1,5 @@
+• index: not relevant,
+• weight: the avocado weight order (in ton),
+• prod_distance: distance from where the avocado ordered is produced (in Mkm),
+• time_delivery: time between the order and the receipt (in days),
+• target: price of the order (in trantorian unit).
